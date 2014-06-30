@@ -1,0 +1,24 @@
+<?xml version='1.0'?>
+<!DOCTYPE platform SYSTEM "http://simgrid.gforge.inria.fr/simgrid.dtd">
+<platform version="3">
+  <process host="Jacquelin" function="agentMngt.cacheAgent">
+      <argument value="TeX"/>
+      <argument value="Boivin"/>
+      <argument value="Jean_Yves"/>
+  </process>
+  <process host="TeX" function="agentMngt.cacheAgent">
+      <argument value="Jacquelin"/>
+      <argument value="Boivin"/>
+      <argument value="Jean_Yves"/>
+  </process>
+  <process host="Boivin" function="agentMngt.cacheAgent">
+	<argument value="Jacquelin"/>
+        <argument value="TeX"/>
+        <argument value="Jean_Yves"/>
+  </process>
+  <process host="Jean_Yves" function="agentMngt.cacheAgent">
+	<argument value="Jacquelin"/>
+        <argument value="TeX"/>
+        <argument value="Boivin"/>
+  </process>
+</platform>

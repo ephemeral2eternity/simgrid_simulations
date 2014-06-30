@@ -1,7 +1,13 @@
 package agentMngt;
 
 import java.util.ArrayList;
-
+import java.lang.reflect.Array;
+import java.util.Map;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.List;
 import org.simgrid.msg.Host;
 import org.simgrid.msg.HostNotFoundException;
 import org.simgrid.msg.Msg;
@@ -17,119 +23,158 @@ public class cacheAgent extends Process {
 	final double commSizeBw = 10000000;
 	private int pongRcv = 0;
 	private ArrayList<Comm> comms;
+	private ArrayList<String> peerAgents;
+	private ArrayList<Double> peerDiffs;
+	private double[] preCoords = {0.0, 0.0};
+	private double[] curCoords = {0.0, 0.0};
 	
 	public cacheAgent(Host host, String name, String[] args) {
 		super(host, name, args);
 		this.hostName = host.getName();
 		this.comms = new ArrayList<Comm>();
+		this.peerAgents = new ArrayList<String>();
+		this.peerDiffs = new ArrayList<Double>();
 	}
 
-	
-	public void ping(String peerAgent) throws MsgException
+	public Comm ping(String peerAgent) throws MsgException
 	{
 		double msgSz = 50;
 		double computeDuration = 0;
 		double time = Msg.getClock();
-		PingPongTask task = new PingPongTask("Ping", computeDuration, msgSz);
+		VivaldiTask task = new VivaldiTask("Ping", computeDuration, msgSz);
 		task.setTime(time);
 		task.setIsPing(true);
+		task.setVivaldi(this.curCoords);
 		Comm comm = task.isend(peerAgent);
-		this.comms.add(comm);
-		Msg.info(hostName + " sent a Ping message to " + peerAgent);
+		// Msg.info(hostName + " sent a Ping message to " + peerAgent);
+		return comm;
 	}
 
-	public double processPing(PingPongTask revTask) throws MsgException
-	{
-		double msgSz = 50;
-		double computeDuration = 0;
-		double RTT = 0;
-		if (revTask.getIsPing())
+        void copyArray(double[] dst, double[] src) {
+		int i, len;
+		len = Array.getLength(src);
+		if (len != Array.getLength(dst))
 		{
-			// Send back Pong message.
-			String sender = revTask.getSource().getName();
-			Msg.info(hostName + " receives a Ping message from " + sender);
-			PingPongTask pongTask = new PingPongTask("Pong", computeDuration, msgSz);
-			pongTask.setIsPing(false);
-			pongTask.setTime(revTask.getTime());
-			Comm comm = pongTask.isend(sender);
-			this.comms.add(comm);
-			Msg.info(hostName + " sends a Pong message to " + sender);
+			System.out.println("[copyArray Error] The dimension of two input arrays are not the same!");
 		}
 		else
 		{
-			// Receive a Pong Message
-			String sender = revTask.getSource().getName();
-			Msg.info(hostName + " receives a Pong message from " + sender);
-			
-			double timeGot = Msg.getClock();
-			double timeSent = revTask.getTime();
-			RTT = timeGot - timeSent;
-			this.pongRcv ++;
-			Msg.info("[RTT]" + this.hostName + "<-->" + revTask.getSource().getName() + " " + RTT + " ms!");
-			// System.out.println(this.hostName + "-->" + sender + ", " + RTT);
+			for (i = 0; i < len; i ++)
+			{
+				dst[i] = src[i];
+			}
 		}
-		return RTT;
+	}
+
+	public boolean isConverge(ArrayList<Double> diffs, double threshold)
+	{
+		boolean converge = true;
+		// System.out.print("The differences are: ");
+		for (Double curDiff : diffs)
+		{
+			// System.out.print(curDiff + ", ");
+			if (curDiff > threshold)
+				converge = false;
+		}
+		// System.out.print("\n");
+		return converge;
 	}
 
 	public void main(String[] args) throws MsgException {
-		Msg.info("Hello, I am agent_" + this.hostName);
-
-		int hostCount = args.length;
-		Msg.info("# of Peer Agents: " + hostCount);
-		Comm recvComm = Task.irecv(this.hostName);
-
-		int iter = 0;
-		int rcvCount = 0;
+		int hostFileCnt = args.length;
 		Task recvTask = null;
 		int timeoutCnt = 0;
+		int index = 0;
+		double c_c = 0.8;
+		double RTT = 10;
+		double delta = 0.05;
+		double diff = 1;
+		double th = 0.1;
 
-		if (hostCount > 0)
+		// Msg.info("I am agent " + this.hostName);
+		if (hostFileCnt > 0)
 		{
-			String peerAgents[] = new String[hostCount];
-
-			for(int pos = 0; pos < args.length; pos++) {
+			try {
+				List<String> peers = Files.readAllLines(Paths.get(args[0]), Charset.defaultCharset());
+				this.peerAgents.addAll(peers);
+				for (String peer : this.peerAgents) {
+					// Msg.info(peer);
+					this.peerDiffs.add(diff);
+				}
+			} catch (IOException e) {
+				Msg.info("Invalid host file name: " + args[0]);
+			}
+			
+			/*for(int pos = 0; pos < hostCount; pos++) {
 		   	   try {
-				peerAgents[pos] = Host.getByName(args[pos]).getName();		
+				// Msg.info("Input hostname: " + args[pos]);
+				this.peerAgents.add(Host.getByName(args[pos]).getName());
+				this.peerDiffs.add(diff);
 		   	   } catch (HostNotFoundException e) {
 				Msg.info("Invalid deployment file: " + e.toString());
 				System.exit(1);
 		   	   }
+			}*/
+		
+			for (int pos = 0; pos < this.peerAgents.size(); pos ++) {
+				// Msg.info("Ping Agent : " + peerAgents.get(pos));
+				ping(peerAgents.get(pos));
+			}
+		}
+
+		// System.out.println(this.hostName + ": (" + preCoords[0] + " ," + preCoords[1] + ")");
+		while (true){
+			recvTask = null;	
+			for (int i = 0; i < this.comms.size(); i ++) {
+				try {
+					if (this.comms.get(i).test()) {
+						this.comms.remove(i);
+						i --;
+					}
+				} catch (Exception e) {
+					Msg.info("[Error] Message sent failure!!");
+					e.printStackTrace();
+				}
 			}
 		
-			for (int pos = 0; pos < hostCount; pos ++) {
-				ping(peerAgents[pos]);
+			try {
+				recvTask = Task.receive(this.hostName, 100);
+			} catch (TimeoutException e) {
+				// Msg.info("[Exception] Timeout exception in retrieving tasks!");
+				timeoutCnt ++;
+			}
+	
+			if (recvTask != null)
+			{
+				if (recvTask instanceof VivaldiTask)
+				{
+					VivaldiTask recvppTask = (VivaldiTask) recvTask;
+					if (recvppTask.getIsPing())
+					{
+						this.comms.add(recvppTask.processPing(this.preCoords));
+					}
+					else
+					{
+						index = peerAgents.indexOf(recvppTask.getSenderName());
+						RTT = recvppTask.processPong();
+						copyArray(this.curCoords, recvppTask.updateVivaldi(preCoords, RTT,  delta));
+						diff = VivaldiTask.getDistance(preCoords, curCoords);
+						peerDiffs.set(index, diff);
+
+						copyArray(preCoords, curCoords);
+
+						if (diff > th)
+							ping(recvppTask.getSenderName());
+					}
+				}
 			}
 
-			while (true){
-				recvTask = null;	
-				for (int i = 0; i < this.comms.size(); i ++) {
-					try {
-						if (this.comms.get(i).test()) {
-							this.comms.remove(i);
-							i --;
-						}
-					} catch (Exception e) {
-						System.out.print("[Error] Message sent failure!!");
-						e.printStackTrace();
-					}
-				}
-				try {
-					recvTask = Task.receive(this.hostName, 10);
-				} catch (TimeoutException e) {
-					Msg.info("[Exception] Timeout exception in retrieving tasks!");
-					timeoutCnt ++;
-				}
-				if (recvTask != null)
-				{
-					if (recvTask instanceof agentMngt.PingPongTask)
-					{
-						processPing((PingPongTask) recvTask);
-					}
-				}
-				if ((this.comms.size() == 0) && (timeoutCnt > 3))
-					break;
-			}	
-		}
-		Msg.info("goodbye!");
+			boolean converge = isConverge(this.peerDiffs, th);		
+			if ((this.comms.size() == 0) && converge && (timeoutCnt > 3))
+				break;
+		}	
+
+		System.out.println(this.hostName + ": (" + curCoords[0] + " ," + curCoords[1] + ")");
+		// Msg.info("goodbye!");
 	}
 }
