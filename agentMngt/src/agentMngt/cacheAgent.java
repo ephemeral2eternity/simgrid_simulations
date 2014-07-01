@@ -177,6 +177,7 @@ public class cacheAgent extends Process {
 					{
 						index = peerAgents.indexOf(recvppTask.getSenderName());
 						RTT = recvppTask.processPong();
+						Msg.info(this.hostName + "<==>" + recvppTask.getSenderName() + ": " + RTT);
 						peerDiff = recvppTask.getError();
 						delta = c_c * diff / (diff + peerDiff);
 						copyArray(this.curCoords, recvppTask.updateVivaldi(preCoords, RTT,  delta));

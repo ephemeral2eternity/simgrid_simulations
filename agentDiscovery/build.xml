@@ -1,0 +1,33 @@
+<project name="AgentTest" basedir="." default="jar">
+    <property name="lib.dir" value="lib"/>
+    <property name="build.dir" value="build"/>
+    <property name="src.dir" value="src"/>
+    <property name="main.class" value="agentDiscovery.AgentTest"/>
+    <path id="classpath">
+	<pathelement location="${lib.dir}/simgrid_full.jar"/>
+    </path>
+    <target name="clean">
+        <delete dir="build"/>
+	<delete>
+	   <fileset dir="." includes="*.jar"/>
+	   <fileset dir="." includes="*.log"/>
+	</delete>
+    </target>
+    <target name="build">
+        <mkdir dir="${build.dir}"/>
+        <javac srcdir="${src.dir}" destdir="${build.dir}">
+	     <classpath>
+		<path refid="classpath"/>
+	     </classpath>
+	</javac>
+    </target>
+    <target name="jar" description="JARs the Task" depends="build">
+        <jar destfile="AgentTest.jar" basedir="${build.dir}">
+	   <manifest>
+		<attribute name="Class-Path" value="${lib.dir}/*.jar"/>
+		<attribute name="Main-Class" value="${main.class}"/>
+	   </manifest>
+	   <zipgroupfileset dir="${lib.dir}" includes="*.jar"/>
+	</jar>
+    </target>
+</project>

@@ -4,7 +4,7 @@
 /* This program is free software; you can redistribute it and/or modify it
  * under the terms of the license (GNU LGPL) which comes with this package. */
 
-package agentMngt;
+package agentDiscovery;
 
 import java.lang.Math;
 import java.lang.reflect.Array;
@@ -42,12 +42,10 @@ public class VivaldiTask extends PingPongTask {
         double msgSz = 50;
         double computeDuration = 0;
 
-	double time = Msg.getClock();
         String sender = this.getSenderName();
         VivaldiTask pongTask = new VivaldiTask("Pong", computeDuration, msgSz);
         pongTask.setIsPing(false);
         pongTask.setTime(this.getTime());
-        // pongTask.setTime(time);
 	pongTask.setVivaldi(newCoords);
 	pongTask.setError(diff);
         Comm comm = pongTask.isend(sender);
