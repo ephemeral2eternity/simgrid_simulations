@@ -45,6 +45,7 @@ public class cacheAgent extends Process {
 		task.setTime(time);
 		task.setIsPing(true);
 		task.setVivaldi(this.curCoords);
+		// task.setError(diff);
 		Comm comm = task.isend(peerAgent);
 		// Msg.info(hostName + " sent a Ping message to " + peerAgent);
 		return comm;
@@ -81,40 +82,47 @@ public class cacheAgent extends Process {
 	}
 
 	public void main(String[] args) throws MsgException {
-		int hostFileCnt = args.length;
+		int inputArgs = args.length;
 		Task recvTask = null;
 		int timeoutCnt = 0;
 		int index = 0;
-		double c_c = 0.8;
-		double RTT = 10;
-		double delta = 0.05;
+		double c_c = 0.4;
+		double RTT = 2;
+		double delta = 0.01;
 		double diff = 1;
+		double peerDiff = 1;
 		double th = 0.1;
 
 		// Msg.info("I am agent " + this.hostName);
-		if (hostFileCnt > 0)
+		if (inputArgs > 0)
 		{
-			try {
-				List<String> peers = Files.readAllLines(Paths.get(args[0]), Charset.defaultCharset());
-				this.peerAgents.addAll(peers);
-				for (String peer : this.peerAgents) {
-					// Msg.info(peer);
-					this.peerDiffs.add(diff);
+			String strArg = new String(args[0]);
+			if (strArg.endsWith(".csv"))
+			{
+				try {
+					List<String> peers = Files.readAllLines(Paths.get(args[0]), Charset.defaultCharset());
+					this.peerAgents.addAll(peers);
+					for (String peer : this.peerAgents) {
+						// Msg.info(peer);
+						this.peerDiffs.add(diff);
+					}
+				} catch (IOException e) {
+					Msg.info("Invalid host file name: " + args[0]);
 				}
-			} catch (IOException e) {
-				Msg.info("Invalid host file name: " + args[0]);
 			}
-			
-			/*for(int pos = 0; pos < hostCount; pos++) {
-		   	   try {
-				// Msg.info("Input hostname: " + args[pos]);
-				this.peerAgents.add(Host.getByName(args[pos]).getName());
-				this.peerDiffs.add(diff);
-		   	   } catch (HostNotFoundException e) {
-				Msg.info("Invalid deployment file: " + e.toString());
-				System.exit(1);
-		   	   }
-			}*/
+			else
+			{
+				for(int pos = 0; pos < inputArgs; pos++) {
+		   	   		try {
+						// Msg.info("Input hostname: " + args[pos]);
+						this.peerAgents.add(Host.getByName(args[pos]).getName());
+						this.peerDiffs.add(diff);
+		   	   		} catch (HostNotFoundException e) {
+						Msg.info("Invalid deployment file: " + e.toString());
+						System.exit(1);
+		   	   		}
+				}
+			}
 		
 			for (int pos = 0; pos < this.peerAgents.size(); pos ++) {
 				// Msg.info("Ping Agent : " + peerAgents.get(pos));
@@ -133,7 +141,8 @@ public class cacheAgent extends Process {
 					}
 				} catch (Exception e) {
 					Msg.info("[Error] Message sent failure!!");
-					e.printStackTrace();
+					this.comms.remove(i);
+					// e.printStackTrace();
 				}
 			}
 		
@@ -151,15 +160,17 @@ public class cacheAgent extends Process {
 					VivaldiTask recvppTask = (VivaldiTask) recvTask;
 					if (recvppTask.getIsPing())
 					{
-						this.comms.add(recvppTask.processPing(this.preCoords));
+						this.comms.add(recvppTask.processPing(this.preCoords, diff));
 					}
 					else
 					{
 						index = peerAgents.indexOf(recvppTask.getSenderName());
 						RTT = recvppTask.processPong();
+						peerDiff = recvppTask.getError();
+						delta = c_c * diff / (diff + peerDiff);
 						copyArray(this.curCoords, recvppTask.updateVivaldi(preCoords, RTT,  delta));
 						diff = VivaldiTask.getDistance(preCoords, curCoords);
-						peerDiffs.set(index, diff);
+						// peerDiffs.set(index, diff);
 
 						copyArray(preCoords, curCoords);
 
@@ -169,12 +180,12 @@ public class cacheAgent extends Process {
 				}
 			}
 
-			boolean converge = isConverge(this.peerDiffs, th);		
-			if ((this.comms.size() == 0) && converge && (timeoutCnt > 3))
+			// boolean converge = isConverge(this.peerDiffs, th);		
+			if ((this.comms.size() == 0) && (diff <= th) && (timeoutCnt > 3))
 				break;
 		}	
 
-		System.out.println(this.hostName + ": (" + curCoords[0] + " ," + curCoords[1] + ")");
+		System.out.println(this.hostName + ", " + curCoords[0] + " ," + curCoords[1]);
 		// Msg.info("goodbye!");
 	}
 }

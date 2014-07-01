@@ -16,7 +16,7 @@ import org.simgrid.msg.NativeException;
 public class VivaldiTask extends PingPongTask {
 
    private double[] vivaldiCoords = {0.0, 0.0};
-   private double error = 0;
+   private double error = 1.0;
    
    public VivaldiTask(String name, double computeDuration, double messageSize) throws NativeException {
       super(name,computeDuration,messageSize);
@@ -29,7 +29,7 @@ public class VivaldiTask extends PingPongTask {
 
    public double getError()
    {
-	return error;
+	return this.error;
    }
 
    public void setError(double val)
@@ -37,7 +37,7 @@ public class VivaldiTask extends PingPongTask {
 	this.error = val;
    }
 
-   public Comm processPing(double[] newCoords) throws MsgException
+   public Comm processPing(double[] newCoords, double diff) throws MsgException
    {
         double msgSz = 50;
         double computeDuration = 0;
@@ -47,6 +47,7 @@ public class VivaldiTask extends PingPongTask {
         pongTask.setIsPing(false);
         pongTask.setTime(this.getTime());
 	pongTask.setVivaldi(newCoords);
+	pongTask.setError(diff);
         Comm comm = pongTask.isend(sender);
 
         return comm;
