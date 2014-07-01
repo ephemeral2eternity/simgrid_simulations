@@ -8,6 +8,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Random;
 import org.simgrid.msg.Host;
 import org.simgrid.msg.HostNotFoundException;
 import org.simgrid.msg.Msg;
@@ -86,6 +87,7 @@ public class cacheAgent extends Process {
 		Task recvTask = null;
 		int timeoutCnt = 0;
 		int index = 0;
+		int iter = 0;
 		double c_c = 0.4;
 		double RTT = 2;
 		double delta = 0.01;
@@ -101,7 +103,16 @@ public class cacheAgent extends Process {
 			{
 				try {
 					List<String> peers = Files.readAllLines(Paths.get(args[0]), Charset.defaultCharset());
-					this.peerAgents.addAll(peers);
+					int idx = 0;
+					for (int i = 0; i < 10; i ++)
+					{
+						idx = new Random().nextInt(peers.size());
+						while (peers.get(idx).equals(this.hostName))
+						{
+							idx = new Random().nextInt(peers.size());
+						}
+						this.peerAgents.add(peers.get(idx));
+					}
 					for (String peer : this.peerAgents) {
 						// Msg.info(peer);
 						this.peerDiffs.add(diff);
@@ -173,15 +184,16 @@ public class cacheAgent extends Process {
 						// peerDiffs.set(index, diff);
 
 						copyArray(preCoords, curCoords);
+						iter ++;
 
-						if (diff > th)
+						if ((diff > th) && (iter < 500))
 							ping(recvppTask.getSenderName());
 					}
 				}
 			}
 
 			// boolean converge = isConverge(this.peerDiffs, th);		
-			if ((this.comms.size() == 0) && (diff <= th) && (timeoutCnt > 3))
+			if ((this.comms.size() == 0) && ((diff <= th) || (iter >= 500)) && (timeoutCnt > 3))
 				break;
 		}	
 
