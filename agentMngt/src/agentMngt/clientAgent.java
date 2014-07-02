@@ -18,7 +18,7 @@ import org.simgrid.msg.TimeoutException;
 import org.simgrid.msg.Process;
 import org.simgrid.msg.Comm;
 
-public class cacheAgent extends Process {
+public class clientAgent extends Process {
 
 	private String hostName = "";
 	final double commSizeBw = 10000000;
@@ -29,7 +29,7 @@ public class cacheAgent extends Process {
 	private double[] preCoords = {0.0, 0.0};
 	private double[] curCoords = {0.0, 0.0};
 	
-	public cacheAgent(Host host, String name, String[] args) {
+	public clientAgent(Host host, String name, String[] args) {
 		super(host, name, args);
 		this.hostName = host.getName();
 		this.comms = new ArrayList<Comm>();
@@ -104,19 +104,20 @@ public class cacheAgent extends Process {
 				try {
 					List<String> peers = Files.readAllLines(Paths.get(args[0]), Charset.defaultCharset());
 					int idx = 0;
-					/*for (int i = 0; i < 10; i ++)
+					// for (int i = 0; i < 10; i ++)
+					for (String cacheAgent : peers)
 					{
-						idx = new Random().nextInt(peers.size());
+						this.peerAgents.add(cacheAgent);
+						/*idx = new Random().nextInt(peers.size());
 						while (peers.get(idx).equals(this.hostName))
 						{
 							idx = new Random().nextInt(peers.size());
 						}
 						this.peerAgents.add(peers.get(idx));
-					}*/
+						*/
+					}
 					for (String peer : this.peerAgents) {
 						// Msg.info(peer);
-						if (!this.hostName.equals(peer))
-							this.peerAgents.add(peer);
 						this.peerDiffs.add(diff);
 					}
 				} catch (IOException e) {
