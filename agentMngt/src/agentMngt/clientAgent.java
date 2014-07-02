@@ -39,7 +39,7 @@ public class clientAgent extends Process {
 
 	public Comm ping(String peerAgent) throws MsgException
 	{
-		double msgSz = 50;
+		double msgSz = 0;
 		double computeDuration = 0;
 		double time = Msg.getClock();
 		VivaldiTask task = new VivaldiTask("Ping", computeDuration, msgSz);
@@ -180,7 +180,7 @@ public class clientAgent extends Process {
 					{
 						index = peerAgents.indexOf(recvppTask.getSenderName());
 						RTT = recvppTask.processPong();
-						Msg.info(this.hostName + "<==>" + recvppTask.getSenderName() + ": " + RTT);
+						// Msg.info(this.hostName + "<==>" + recvppTask.getSenderName() + ": " + RTT);
 						peerDiff = recvppTask.getError();
 						delta = c_c * diff / (diff + peerDiff);
 						copyArray(this.curCoords, recvppTask.updateVivaldi(preCoords, RTT,  delta));
@@ -190,18 +190,18 @@ public class clientAgent extends Process {
 						copyArray(preCoords, curCoords);
 						iter ++;
 
-						if ((diff > th) && (iter < 500))
+						if ((diff > th) && (iter < 100))
 							ping(recvppTask.getSenderName());
 					}
 				}
 			}
 
 			// boolean converge = isConverge(this.peerDiffs, th);		
-			if ((this.comms.size() == 0) && ((diff <= th) || (iter >= 500)) && (timeoutCnt > 3))
+			if ((this.comms.size() == 0) && ((diff <= th) || (iter >= 100)) && (timeoutCnt > 3))
 				break;
 		}	
 
-		System.out.println(this.hostName + ", " + curCoords[0] + " ," + curCoords[1]);
-		// Msg.info("goodbye!");
+		System.out.println("Client, " + this.hostName + ", " + curCoords[0] + " ," + curCoords[1]);
+		Msg.info("goodbye!");
 	}
 }

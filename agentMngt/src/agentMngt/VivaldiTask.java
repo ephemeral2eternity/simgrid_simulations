@@ -39,7 +39,7 @@ public class VivaldiTask extends PingPongTask {
 
    public Comm processPing(double[] newCoords, double diff) throws MsgException
    {
-        double msgSz = 50;
+        double msgSz = 0;
         double computeDuration = 0;
 
 	double time = Msg.getClock();

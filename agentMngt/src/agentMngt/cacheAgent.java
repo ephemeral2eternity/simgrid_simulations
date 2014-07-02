@@ -39,7 +39,7 @@ public class cacheAgent extends Process {
 
 	public Comm ping(String peerAgent) throws MsgException
 	{
-		double msgSz = 50;
+		double msgSz = 0;
 		double computeDuration = 0;
 		double time = Msg.getClock();
 		VivaldiTask task = new VivaldiTask("Ping", computeDuration, msgSz);
@@ -95,29 +95,22 @@ public class cacheAgent extends Process {
 		double peerDiff = 1;
 		double th = 0.1;
 
-		// Msg.info("I am agent " + this.hostName);
+		Msg.info("I am agent " + this.hostName);
 		if (inputArgs > 0)
 		{
 			String strArg = new String(args[0]);
+			// Msg.info("Input file: " + strArg);
 			if (strArg.endsWith(".csv"))
 			{
 				try {
 					List<String> peers = Files.readAllLines(Paths.get(args[0]), Charset.defaultCharset());
-					int idx = 0;
-					/*for (int i = 0; i < 10; i ++)
-					{
-						idx = new Random().nextInt(peers.size());
-						while (peers.get(idx).equals(this.hostName))
-						{
-							idx = new Random().nextInt(peers.size());
-						}
-						this.peerAgents.add(peers.get(idx));
-					}*/
-					for (String peer : this.peerAgents) {
-						// Msg.info(peer);
+					for (String peer : peers) {
 						if (!this.hostName.equals(peer))
+						{
+							// Msg.info(peer);
 							this.peerAgents.add(peer);
-						this.peerDiffs.add(diff);
+							this.peerDiffs.add(diff);
+						}
 					}
 				} catch (IOException e) {
 					Msg.info("Invalid host file name: " + args[0]);
@@ -137,9 +130,9 @@ public class cacheAgent extends Process {
 				}
 			}
 		
-			for (int pos = 0; pos < this.peerAgents.size(); pos ++) {
-				// Msg.info("Ping Agent : " + peerAgents.get(pos));
-				ping(peerAgents.get(pos));
+			for (String cacheAgent : this.peerAgents) {
+				// Msg.info("Ping Agent : " + cacheAgent);
+				ping(cacheAgent);
 			}
 		}
 
@@ -200,7 +193,7 @@ public class cacheAgent extends Process {
 				break;
 		}	
 
-		System.out.println(this.hostName + ", " + curCoords[0] + " ," + curCoords[1]);
-		// Msg.info("goodbye!");
+		System.out.println("Server, " + this.hostName + ", " + curCoords[0] + " ," + curCoords[1]);
+		Msg.info("goodbye!");
 	}
 }
