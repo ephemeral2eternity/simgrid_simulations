@@ -94,8 +94,6 @@ public class clientAgent extends Process {
 			this.serverLevels.put(curServer, curLevel);
 			Collections.sort(this.videoServers, this.lCmp);
 			bw = (msgSz*8 / dTime) / 1024;
-			Msg.info("Played: " + this.playTime + "; Seq: " + recvSTask.getNum() + "; Server: " + curServer +  "; Level: " + curLevel + "; BW: " + bw + " kbps" + "; Buffer: " + this.buf);
-			System.out.println(recvSTask.getNum() + ", " + curServer + ", "+ curLevel + ", " + bw);
 
 			if (bw > bitrates[curLevel - 1])
 			{
@@ -126,6 +124,8 @@ public class clientAgent extends Process {
 				nextLevel = 1;
 			}
 
+			Msg.info("Played: " + this.playTime + "; Seq: " + recvSTask.getNum() + "; Server: " + curServer +  "; Level: " + curLevel + "; BW: " + bw + " kbps" + "; Buffer: " + this.buf);
+			System.out.println(recvSTask.getNum() + ", " + curServer + ", "+ curLevel + ", " + bw + ", " + this.buf + ", " + this.playTime);
 			seq = recvSTask.getNum() + 1;
 			if (seq < 720)
 				this.request(nextServer, seq, nextLevel);
