@@ -23,11 +23,13 @@ public class clientAgent extends Process {
 	private String cacheAgent;
 	private ArrayList<String> videoServers;
 	private Map<String, Integer> serverLevels;
-	private LevelComparator lCmp;
+	private Map<String, Double> serverQoE;
+	private QoEComparator qoeCmp;
 	private double[] curCoords = {0.0, 0.0};
 	private double buf;
 	private double startTime;
 	private double playTime;
+	private double freezeTime;
 	static private double[] bitrates = {400.0, 628.0, 986.0, 1549.0, 2433.0, 3821.0, 6000.0};
 	static private double CHUNKLEN = 5.0;
 	
@@ -36,8 +38,10 @@ public class clientAgent extends Process {
 		this.clientName = host.getName();
 		this.comms = new ArrayList<Comm>();
 		this.serverLevels = new HashMap<String, Integer>();
+		this.serverQoE = new HashMap<String, Double>();
 		this.videoServers = new ArrayList<String>();
 		this.buf = 0.0;
+		this.freezeTime = 0.0;
 	}
 
 	public Comm request(String cacheServer, int num, int level) throws MsgException
@@ -59,21 +63,78 @@ public class clientAgent extends Process {
 	{
 		int nextLv = 1;
 		int i = 1;
-		for (double rate : bitrates)
+		for (double rate : this.bitrates)
 		{
-			if (rate < bw)
+			if (bw > rate) {
 				nextLv = i;
+			}
 			i ++;
 		}
 		return nextLv;
 	}
 
+	public double findNextFreeze(double pBw, double buffer, int nextLevel)
+	{
+		double pDownloadTime = 0;
+		double nextBitrate = this.bitrates[nextLevel - 1];
+		pDownloadTime = nextBitrate * CHUNKLEN / pBw;
+
+		double nextBuf = buffer + CHUNKLEN - pDownloadTime;
+		double nextFreeze = 0;
+
+		if (nextBuf < 0)
+			nextFreeze = -nextBuf;
+
+		return nextFreeze;
+	}
+
+	public String findNextServer(String curServer, double nextQoE)
+	{	
+		Collections.sort(this.videoServers, this.qoeCmp);
+		String topServer = this.videoServers.get(0);
+		double topQoE = this.serverQoE.get(topServer);
+		if (topQoE < nextQoE)
+			return curServer;
+		else
+			return topServer;
+	}
+
+	public double computeQoE(double freezingTime, int bitrateLevel)
+	{
+		double delta = 0.5;
+		double q_freeze = 5.0, q_bitrate = 5.0;
+		double maxBitrate = this.bitrates[this.bitrates.length - 1];
+		double curBitrate = this.bitrates[bitrateLevel - 1];
+
+		double[] c = {5.0, 6.3484, 4.4, 0.72134};
+		double[] a = {1.3554, 40};
+
+		if (freezingTime > 0)
+			q_freeze = c[0] - c[1] / (1 + Math.pow((c[2]/freezingTime), c[3]));
+
+		q_bitrate = a[0] * Math.log(a[1]*curBitrate/maxBitrate);
+
+		double qoe = delta * q_freeze + (1 - delta) * q_bitrate;
+		return qoe;
+	}
+
+	public void updateQoE(String server, double qoe)
+	{
+		double alpha = 0.6;   // A higher alpha discounts older observations faster.
+		double preQoE = this.serverQoE.get(server);
+		double newQoE = qoe * alpha + (1 - alpha) * preQoE;
+		this.serverQoE.put(server, newQoE);
+	}
+
+
 	public void processResponse(Task recvTask) throws HostFailureException, MsgException {
 		double curTime;
 		double msgSz;
 		double dTime, bw;
-		String curServer, nextServer, switchedServer;
-		int curLevel, nextLevel, switchedLevel;
+		double curQoE, curBuf, curPlayTime, nextQoE;
+		double curFreezing = 0, nextFreezing = 0;
+		String curServer, nextServer;
+		int curLevel, nextLevel;
 		int seq;
 		int lvls = this.bitrates.length;
 
@@ -85,50 +146,57 @@ public class clientAgent extends Process {
 			{
 				this.startTime = curTime;
 			}
-			this.playTime = curTime - this.startTime;
-			this.buf = recvSTask.getChunkLen() * (recvSTask.getNum() + 1) - this.playTime;
+			curPlayTime = curTime - this.startTime - this.freezeTime;
+			curBuf = recvSTask.getChunkLen() * (recvSTask.getNum() + 1) - curPlayTime;
 			curServer = recvSTask.getSenderName();
 			msgSz = recvSTask.getMessageSize();
 			dTime = (curTime - recvSTask.getTime());
 			curLevel = recvSTask.getLevel();
 			this.serverLevels.put(curServer, curLevel);
-			Collections.sort(this.videoServers, this.lCmp);
-			bw = (msgSz*8 / dTime) / 1024;
 
-			if (bw > bitrates[curLevel - 1])
-			{
-				nextLevel = ((curLevel + 1) >= lvls) ? lvls : (curLevel + 1);
+			if (curBuf >= 0) {
+				curFreezing = 0;
+				this.buf = curBuf;
+				this.playTime = curPlayTime;
 			}
-			else
-			{
-				nextLevel = findNextLevel(bw);
-			}
-
-			nextServer = curServer;
-			switchedServer = this.videoServers.get(0);
-			switchedLevel = this.serverLevels.get(nextServer);
-
-			if (switchedLevel > nextLevel) {
-				nextServer = switchedServer;
-				nextLevel = switchedLevel;
-			}
-			if (this.buf > CHUNKLEN * 6) {
-				waitFor(CHUNKLEN);
-			}
-			else if (this.buf < CHUNKLEN * 0.5) {
-				nextLevel = 1;
-			}
-			else if (this.buf < 0) {
+			else {
+				curFreezing = -curBuf;
+				this.freezeTime += curFreezing;	
 				this.buf = 0;
 				this.playTime = (recvSTask.getNum() + 1) * CHUNKLEN;
 				nextLevel = 1;
 			}
 
-			Msg.info("Played: " + this.playTime + "; Seq: " + recvSTask.getNum() + "; Server: " + curServer +  "; Level: " + curLevel + "; BW: " + bw + " kbps" + "; Buffer: " + this.buf);
-			System.out.println(recvSTask.getNum() + ", " + curServer + ", "+ curLevel + ", " + bw + ", " + this.buf + ", " + this.playTime);
+			// Predict user Quality of Experience.
+			bw = (msgSz / dTime) / 1024;
+			nextLevel = findNextLevel(bw);
+			nextFreezing = findNextFreeze(bw, this.buf, nextLevel);
+			curQoE = computeQoE(curFreezing, curLevel);
+			nextQoE = computeQoE(nextFreezing, nextLevel);
+			updateQoE(curServer, curQoE);
+
+			// Find next best server to serve next chunk.
+			nextServer = findNextServer(curServer, nextQoE);
+
+			// If the client should switch server, get the level of bitrate as the level you get from last time.
+			if (!nextServer.equals(curServer))
+				nextLevel = this.serverLevels.get(nextServer);
+
+			if (this.buf > CHUNKLEN * 6) {
+				waitFor(CHUNKLEN);
+			}
+			else if ((this.buf < CHUNKLEN * 0.5) && (this.buf > 0)) {
+				nextLevel = 1;
+			}
+
+			Msg.info("Played: " + this.playTime + "; Seq: " + recvSTask.getNum() + "; Server: " + curServer +  "; QoE: " + curQoE + "; BW: " + bw + " kbps");
+			System.out.println(recvSTask.getNum() + ", " + curServer + ", "+ curQoE + ", " + bw);
 			seq = recvSTask.getNum() + 1;
 			if (seq < 720)
+			{
+				// System.out.println("Client selected level: " + nextLevel);
 				this.request(nextServer, seq, nextLevel);
+			}
 		}
 		else
 		{
@@ -157,11 +225,13 @@ public class clientAgent extends Process {
 				this.cacheAgent = Host.getByName(args[0]).getName();
 				this.videoServers.add(this.cacheAgent);
 				this.serverLevels.put(this.cacheAgent, 7);
+				this.serverQoE.put(this.cacheAgent, 5.0);
 				for (int i = 1; i < inputArgs; i ++)
 				{
 					String server = Host.getByName(args[i]).getName();
 					this.videoServers.add(server);
 					this.serverLevels.put(server, 6);
+					this.serverQoE.put(server, 4.0);
 				}
 			} catch (HostNotFoundException e) {
 				Msg.info("Invalid deployment file: " + e.toString());
@@ -169,8 +239,8 @@ public class clientAgent extends Process {
 			}
 		}
 		Msg.info(printMap(this.serverLevels));
-		this.lCmp = new LevelComparator(this.serverLevels);
-		this.comms.add(request(this.cacheAgent, 0, 1));
+		this.qoeCmp = new QoEComparator(this.serverQoE);
+		this.comms.add(request(this.cacheAgent, 0, this.serverLevels.get(this.cacheAgent)));
 
 		while (true){
 			recvTask = null;	

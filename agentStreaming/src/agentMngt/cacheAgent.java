@@ -38,10 +38,13 @@ public class cacheAgent extends Process {
 		double computeDuration = 0;
 		StreamingTask recvRequest = (StreamingTask) request;
 		int rcvLevel = recvRequest.getLevel();
-		msgSz = bitrates[rcvLevel - 1] * 1024 * 5 / 8;
+		msgSz = bitrates[rcvLevel - 1] * 1024 * 5;
+		//double time = Msg.getClock();
 		StreamingTask data = new StreamingTask("Data", computeDuration, msgSz);
 		data.setTime(recvRequest.getTime());
+		// data.setTime(time);
 		data.setLevel(rcvLevel);
+		// System.out.println("Server sent level: " + rcvLevel);
 		data.setChunkLen(CHUNKLEN);
 		data.setNum(recvRequest.getNum());
 		data.setIsRequest(false);
