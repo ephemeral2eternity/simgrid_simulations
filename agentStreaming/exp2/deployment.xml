@@ -1,10 +1,13 @@
 <?xml version='1.0'?>
 <!DOCTYPE platform SYSTEM "http://simgrid.gforge.inria.fr/simgrid.dtd">
 <platform version="3">
-  <process host="Server_00" function="agentMngt.cacheAgent"/>
-  <process host="server_01" function="agentMngt.cacheAgent"/>
-  <process host="Client_0000" function="agentMngt.clientAgent">
-      <argument value="server_00"/>
-      <argument value="server_01">
+  <process host="Server_1" function="agentMngt.cacheAgent"/>
+  <process host="Client_5" function="agentMngt.cacheAgent"/>
+  <process host="Client_1" function="agentMngt.clientAgent">
+      <argument value="Client_5"/>
+      <argument value="Server_1"/>
+  </process>
+  <process host="Server_2" function="agentMngt.clientAgent">
+      <argument value="Server_1"/>
   </process>
 </platform>
