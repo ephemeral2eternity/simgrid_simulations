@@ -1,0 +1,599 @@
+<?xml version='1.0'?>
+<!DOCTYPE platform SYSTEM "http://simgrid.gforge.inria.fr/simgrid.dtd">
+
+<platform version="3">
+  <AS id="AS_0" routing="Full">
+    <AS id="AS_00" routing="Full">
+      <AS id="AS_000" routing="Full">
+        <router id="CenterRouter_000"/>
+        <router id="Gateway_000"/>
+        <host id="Client_0000" power="1000000000"/>
+        <host id="Client_0001" power="1000000000"/>
+        <host id="Client_0002" power="1000000000"/>
+        <host id="Client_0003" power="1000000000"/>
+        <link bandwidth="10000000" id="Link_0000" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0001" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0002" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0003" latency="5E-4"/>
+        <link bandwidth="10000000000" id="Backbone_000" latency="0.1"/>
+        <route dst="Client_0000" src="CenterRouter_000">
+          <link_ctn id="Link_0000"/>
+        </route>
+        <route dst="Client_0001" src="CenterRouter_000">
+          <link_ctn id="Link_0001"/>
+        </route>
+        <route dst="Client_0002" src="CenterRouter_000">
+          <link_ctn id="Link_0002"/>
+        </route>
+        <route dst="Client_0003" src="CenterRouter_000">
+          <link_ctn id="Link_0003"/>
+        </route>
+        <route dst="Gateway_000" src="CenterRouter_000">
+          <link_ctn id="Backbone_000"/>
+        </route>
+      </AS>
+      <AS id="AS_001" routing="Full">
+        <router id="CenterRouter_001"/>
+        <router id="Gateway_001"/>
+        <host id="Client_0010" power="1000000000"/>
+        <host id="Client_0011" power="1000000000"/>
+        <host id="Client_0012" power="1000000000"/>
+        <host id="Client_0013" power="1000000000"/>
+        <link bandwidth="10000000" id="Link_0010" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0011" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0012" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0013" latency="5E-4"/>
+        <link bandwidth="10000000000" id="Backbone_001" latency="0.1"/>
+        <route dst="Client_0010" src="CenterRouter_001">
+          <link_ctn id="Link_0010"/>
+        </route>
+        <route dst="Client_0011" src="CenterRouter_001">
+          <link_ctn id="Link_0011"/>
+        </route>
+        <route dst="Client_0012" src="CenterRouter_001">
+          <link_ctn id="Link_0012"/>
+        </route>
+        <route dst="Client_0013" src="CenterRouter_001">
+          <link_ctn id="Link_0013"/>
+        </route>
+        <route dst="Gateway_001" src="CenterRouter_001">
+          <link_ctn id="Backbone_001"/>
+        </route>
+      </AS>
+      <AS id="AS_002" routing="Full">
+        <router id="CenterRouter_002"/>
+        <router id="Gateway_002"/>
+        <host id="Client_0020" power="1000000000"/>
+        <host id="Client_0021" power="1000000000"/>
+        <host id="Client_0022" power="1000000000"/>
+        <host id="Client_0023" power="1000000000"/>
+        <link bandwidth="10000000" id="Link_0020" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0021" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0022" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0023" latency="5E-4"/>
+        <link bandwidth="10000000000" id="Backbone_002" latency="0.1"/>
+        <route dst="Client_0020" src="CenterRouter_002">
+          <link_ctn id="Link_0020"/>
+        </route>
+        <route dst="Client_0021" src="CenterRouter_002">
+          <link_ctn id="Link_0021"/>
+        </route>
+        <route dst="Client_0022" src="CenterRouter_002">
+          <link_ctn id="Link_0022"/>
+        </route>
+        <route dst="Client_0023" src="CenterRouter_002">
+          <link_ctn id="Link_0023"/>
+        </route>
+        <route dst="Gateway_002" src="CenterRouter_002">
+          <link_ctn id="Backbone_002"/>
+        </route>
+      </AS>
+      <AS id="AS_003" routing="Full">
+        <router id="CenterRouter_003"/>
+        <router id="Gateway_003"/>
+        <host id="Client_0030" power="1000000000"/>
+        <host id="Client_0031" power="1000000000"/>
+        <host id="Client_0032" power="1000000000"/>
+        <host id="Client_0033" power="1000000000"/>
+        <link bandwidth="10000000" id="Link_0030" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0031" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0032" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0033" latency="5E-4"/>
+        <link bandwidth="10000000000" id="Backbone_003" latency="0.1"/>
+        <route dst="Client_0030" src="CenterRouter_003">
+          <link_ctn id="Link_0030"/>
+        </route>
+        <route dst="Client_0031" src="CenterRouter_003">
+          <link_ctn id="Link_0031"/>
+        </route>
+        <route dst="Client_0032" src="CenterRouter_003">
+          <link_ctn id="Link_0032"/>
+        </route>
+        <route dst="Client_0033" src="CenterRouter_003">
+          <link_ctn id="Link_0033"/>
+        </route>
+        <route dst="Gateway_003" src="CenterRouter_003">
+          <link_ctn id="Backbone_003"/>
+        </route>
+      </AS>
+      <router id="CenterRouter_00"/>
+      <router id="Gateway_00"/>
+      <host id="Server_00" power="1000000000"/>
+      <link bandwidth="10000000000" id="Backbone_00" latency="0.1"/>
+      <link bandwidth="1000000000" id="Serverlink_00" latency="5E-3"/>
+      <link bandwidth="10000000000" id="Link_000" latency="0.1"/>
+      <link bandwidth="10000000000" id="Link_001" latency="0.1"/>
+      <link bandwidth="10000000000" id="Link_002" latency="0.1"/>
+      <link bandwidth="10000000000" id="Link_003" latency="0.1"/>
+      <ASroute dst="AS_000" gw_dst="Gateway_000" gw_src="Gateway_00" src="AS_00">
+        <link_ctn id="Link_000"/>
+      </ASroute>
+      <ASroute dst="AS_001" gw_dst="Gateway_001" gw_src="Gateway_00" src="AS_00">
+        <link_ctn id="Link_001"/>
+      </ASroute>
+      <ASroute dst="AS_002" gw_dst="Gateway_002" gw_src="Gateway_00" src="AS_00">
+        <link_ctn id="Link_002"/>
+      </ASroute>
+      <ASroute dst="AS_003" gw_dst="Gateway_003" gw_src="Gateway_00" src="AS_00">
+        <link_ctn id="Link_003"/>
+      </ASroute>
+      <route dst="Gateway_00" src="CenterRouter_00">
+        <link_ctn id="Backbone_00"/>
+      </route>
+      <route dst="Server_00" src="CenterRouter_00">
+        <link_ctn id="Serverlink_00"/>
+      </route>
+    </AS>
+    <AS id="AS_01" routing="Full">
+      <AS id="AS_010" routing="Full">
+        <router id="CenterRouter_010"/>
+        <router id="Gateway_010"/>
+        <host id="Client_0100" power="1000000000"/>
+        <host id="Client_0101" power="1000000000"/>
+        <host id="Client_0102" power="1000000000"/>
+        <host id="Client_0103" power="1000000000"/>
+        <link bandwidth="10000000" id="Link_0100" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0101" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0102" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0103" latency="5E-4"/>
+        <link bandwidth="10000000000" id="Backbone_010" latency="0.1"/>
+        <route dst="Client_0100" src="CenterRouter_010">
+          <link_ctn id="Link_0100"/>
+        </route>
+        <route dst="Client_0101" src="CenterRouter_010">
+          <link_ctn id="Link_0101"/>
+        </route>
+        <route dst="Client_0102" src="CenterRouter_010">
+          <link_ctn id="Link_0102"/>
+        </route>
+        <route dst="Client_0103" src="CenterRouter_010">
+          <link_ctn id="Link_0103"/>
+        </route>
+        <route dst="Gateway_010" src="CenterRouter_010">
+          <link_ctn id="Backbone_010"/>
+        </route>
+      </AS>
+      <AS id="AS_011" routing="Full">
+        <router id="CenterRouter_011"/>
+        <router id="Gateway_011"/>
+        <host id="Client_0110" power="1000000000"/>
+        <host id="Client_0111" power="1000000000"/>
+        <host id="Client_0112" power="1000000000"/>
+        <host id="Client_0113" power="1000000000"/>
+        <link bandwidth="10000000" id="Link_0110" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0111" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0112" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0113" latency="5E-4"/>
+        <link bandwidth="10000000000" id="Backbone_011" latency="0.1"/>
+        <route dst="Client_0110" src="CenterRouter_011">
+          <link_ctn id="Link_0110"/>
+        </route>
+        <route dst="Client_0111" src="CenterRouter_011">
+          <link_ctn id="Link_0111"/>
+        </route>
+        <route dst="Client_0112" src="CenterRouter_011">
+          <link_ctn id="Link_0112"/>
+        </route>
+        <route dst="Client_0113" src="CenterRouter_011">
+          <link_ctn id="Link_0113"/>
+        </route>
+        <route dst="Gateway_011" src="CenterRouter_011">
+          <link_ctn id="Backbone_011"/>
+        </route>
+      </AS>
+      <AS id="AS_012" routing="Full">
+        <router id="CenterRouter_012"/>
+        <router id="Gateway_012"/>
+        <host id="Client_0120" power="1000000000"/>
+        <host id="Client_0121" power="1000000000"/>
+        <host id="Client_0122" power="1000000000"/>
+        <host id="Client_0123" power="1000000000"/>
+        <link bandwidth="10000000" id="Link_0120" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0121" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0122" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0123" latency="5E-4"/>
+        <link bandwidth="10000000000" id="Backbone_012" latency="0.1"/>
+        <route dst="Client_0120" src="CenterRouter_012">
+          <link_ctn id="Link_0120"/>
+        </route>
+        <route dst="Client_0121" src="CenterRouter_012">
+          <link_ctn id="Link_0121"/>
+        </route>
+        <route dst="Client_0122" src="CenterRouter_012">
+          <link_ctn id="Link_0122"/>
+        </route>
+        <route dst="Client_0123" src="CenterRouter_012">
+          <link_ctn id="Link_0123"/>
+        </route>
+        <route dst="Gateway_012" src="CenterRouter_012">
+          <link_ctn id="Backbone_012"/>
+        </route>
+      </AS>
+      <AS id="AS_013" routing="Full">
+        <router id="CenterRouter_013"/>
+        <router id="Gateway_013"/>
+        <host id="Client_0130" power="1000000000"/>
+        <host id="Client_0131" power="1000000000"/>
+        <host id="Client_0132" power="1000000000"/>
+        <host id="Client_0133" power="1000000000"/>
+        <link bandwidth="10000000" id="Link_0130" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0131" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0132" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0133" latency="5E-4"/>
+        <link bandwidth="10000000000" id="Backbone_013" latency="0.1"/>
+        <route dst="Client_0130" src="CenterRouter_013">
+          <link_ctn id="Link_0130"/>
+        </route>
+        <route dst="Client_0131" src="CenterRouter_013">
+          <link_ctn id="Link_0131"/>
+        </route>
+        <route dst="Client_0132" src="CenterRouter_013">
+          <link_ctn id="Link_0132"/>
+        </route>
+        <route dst="Client_0133" src="CenterRouter_013">
+          <link_ctn id="Link_0133"/>
+        </route>
+        <route dst="Gateway_013" src="CenterRouter_013">
+          <link_ctn id="Backbone_013"/>
+        </route>
+      </AS>
+      <router id="CenterRouter_01"/>
+      <router id="Gateway_01"/>
+      <host id="Server_01" power="1000000000"/>
+      <link bandwidth="10000000000" id="Backbone_01" latency="0.1"/>
+      <link bandwidth="1000000000" id="Serverlink_01" latency="5E-3"/>
+      <link bandwidth="10000000000" id="Link_010" latency="0.1"/>
+      <link bandwidth="10000000000" id="Link_011" latency="0.1"/>
+      <link bandwidth="10000000000" id="Link_012" latency="0.1"/>
+      <link bandwidth="10000000000" id="Link_013" latency="0.1"/>
+      <ASroute dst="AS_010" gw_dst="Gateway_010" gw_src="Gateway_01" src="AS_01">
+        <link_ctn id="Link_010"/>
+      </ASroute>
+      <ASroute dst="AS_011" gw_dst="Gateway_011" gw_src="Gateway_01" src="AS_01">
+        <link_ctn id="Link_011"/>
+      </ASroute>
+      <ASroute dst="AS_012" gw_dst="Gateway_012" gw_src="Gateway_01" src="AS_01">
+        <link_ctn id="Link_012"/>
+      </ASroute>
+      <ASroute dst="AS_013" gw_dst="Gateway_013" gw_src="Gateway_01" src="AS_01">
+        <link_ctn id="Link_013"/>
+      </ASroute>
+      <route dst="Gateway_01" src="CenterRouter_01">
+        <link_ctn id="Backbone_01"/>
+      </route>
+      <route dst="Server_01" src="CenterRouter_01">
+        <link_ctn id="Serverlink_01"/>
+      </route>
+    </AS>
+    <AS id="AS_02" routing="Full">
+      <AS id="AS_020" routing="Full">
+        <router id="CenterRouter_020"/>
+        <router id="Gateway_020"/>
+        <host id="Client_0200" power="1000000000"/>
+        <host id="Client_0201" power="1000000000"/>
+        <host id="Client_0202" power="1000000000"/>
+        <host id="Client_0203" power="1000000000"/>
+        <link bandwidth="10000000" id="Link_0200" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0201" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0202" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0203" latency="5E-4"/>
+        <link bandwidth="10000000000" id="Backbone_020" latency="0.1"/>
+        <route dst="Client_0200" src="CenterRouter_020">
+          <link_ctn id="Link_0200"/>
+        </route>
+        <route dst="Client_0201" src="CenterRouter_020">
+          <link_ctn id="Link_0201"/>
+        </route>
+        <route dst="Client_0202" src="CenterRouter_020">
+          <link_ctn id="Link_0202"/>
+        </route>
+        <route dst="Client_0203" src="CenterRouter_020">
+          <link_ctn id="Link_0203"/>
+        </route>
+        <route dst="Gateway_020" src="CenterRouter_020">
+          <link_ctn id="Backbone_020"/>
+        </route>
+      </AS>
+      <AS id="AS_021" routing="Full">
+        <router id="CenterRouter_021"/>
+        <router id="Gateway_021"/>
+        <host id="Client_0210" power="1000000000"/>
+        <host id="Client_0211" power="1000000000"/>
+        <host id="Client_0212" power="1000000000"/>
+        <host id="Client_0213" power="1000000000"/>
+        <link bandwidth="10000000" id="Link_0210" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0211" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0212" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0213" latency="5E-4"/>
+        <link bandwidth="10000000000" id="Backbone_021" latency="0.1"/>
+        <route dst="Client_0210" src="CenterRouter_021">
+          <link_ctn id="Link_0210"/>
+        </route>
+        <route dst="Client_0211" src="CenterRouter_021">
+          <link_ctn id="Link_0211"/>
+        </route>
+        <route dst="Client_0212" src="CenterRouter_021">
+          <link_ctn id="Link_0212"/>
+        </route>
+        <route dst="Client_0213" src="CenterRouter_021">
+          <link_ctn id="Link_0213"/>
+        </route>
+        <route dst="Gateway_021" src="CenterRouter_021">
+          <link_ctn id="Backbone_021"/>
+        </route>
+      </AS>
+      <AS id="AS_022" routing="Full">
+        <router id="CenterRouter_022"/>
+        <router id="Gateway_022"/>
+        <host id="Client_0220" power="1000000000"/>
+        <host id="Client_0221" power="1000000000"/>
+        <host id="Client_0222" power="1000000000"/>
+        <host id="Client_0223" power="1000000000"/>
+        <link bandwidth="10000000" id="Link_0220" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0221" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0222" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0223" latency="5E-4"/>
+        <link bandwidth="10000000000" id="Backbone_022" latency="0.1"/>
+        <route dst="Client_0220" src="CenterRouter_022">
+          <link_ctn id="Link_0220"/>
+        </route>
+        <route dst="Client_0221" src="CenterRouter_022">
+          <link_ctn id="Link_0221"/>
+        </route>
+        <route dst="Client_0222" src="CenterRouter_022">
+          <link_ctn id="Link_0222"/>
+        </route>
+        <route dst="Client_0223" src="CenterRouter_022">
+          <link_ctn id="Link_0223"/>
+        </route>
+        <route dst="Gateway_022" src="CenterRouter_022">
+          <link_ctn id="Backbone_022"/>
+        </route>
+      </AS>
+      <AS id="AS_023" routing="Full">
+        <router id="CenterRouter_023"/>
+        <router id="Gateway_023"/>
+        <host id="Client_0230" power="1000000000"/>
+        <host id="Client_0231" power="1000000000"/>
+        <host id="Client_0232" power="1000000000"/>
+        <host id="Client_0233" power="1000000000"/>
+        <link bandwidth="10000000" id="Link_0230" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0231" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0232" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0233" latency="5E-4"/>
+        <link bandwidth="10000000000" id="Backbone_023" latency="0.1"/>
+        <route dst="Client_0230" src="CenterRouter_023">
+          <link_ctn id="Link_0230"/>
+        </route>
+        <route dst="Client_0231" src="CenterRouter_023">
+          <link_ctn id="Link_0231"/>
+        </route>
+        <route dst="Client_0232" src="CenterRouter_023">
+          <link_ctn id="Link_0232"/>
+        </route>
+        <route dst="Client_0233" src="CenterRouter_023">
+          <link_ctn id="Link_0233"/>
+        </route>
+        <route dst="Gateway_023" src="CenterRouter_023">
+          <link_ctn id="Backbone_023"/>
+        </route>
+      </AS>
+      <router id="CenterRouter_02"/>
+      <router id="Gateway_02"/>
+      <host id="Server_02" power="1000000000"/>
+      <link bandwidth="10000000000" id="Backbone_02" latency="0.1"/>
+      <link bandwidth="1000000000" id="Serverlink_02" latency="5E-3"/>
+      <link bandwidth="10000000000" id="Link_020" latency="0.1"/>
+      <link bandwidth="10000000000" id="Link_021" latency="0.1"/>
+      <link bandwidth="10000000000" id="Link_022" latency="0.1"/>
+      <link bandwidth="10000000000" id="Link_023" latency="0.1"/>
+      <ASroute dst="AS_020" gw_dst="Gateway_020" gw_src="Gateway_02" src="AS_02">
+        <link_ctn id="Link_020"/>
+      </ASroute>
+      <ASroute dst="AS_021" gw_dst="Gateway_021" gw_src="Gateway_02" src="AS_02">
+        <link_ctn id="Link_021"/>
+      </ASroute>
+      <ASroute dst="AS_022" gw_dst="Gateway_022" gw_src="Gateway_02" src="AS_02">
+        <link_ctn id="Link_022"/>
+      </ASroute>
+      <ASroute dst="AS_023" gw_dst="Gateway_023" gw_src="Gateway_02" src="AS_02">
+        <link_ctn id="Link_023"/>
+      </ASroute>
+      <route dst="Gateway_02" src="CenterRouter_02">
+        <link_ctn id="Backbone_02"/>
+      </route>
+      <route dst="Server_02" src="CenterRouter_02">
+        <link_ctn id="Serverlink_02"/>
+      </route>
+    </AS>
+    <AS id="AS_03" routing="Full">
+      <AS id="AS_030" routing="Full">
+        <router id="CenterRouter_030"/>
+        <router id="Gateway_030"/>
+        <host id="Client_0300" power="1000000000"/>
+        <host id="Client_0301" power="1000000000"/>
+        <host id="Client_0302" power="1000000000"/>
+        <host id="Client_0303" power="1000000000"/>
+        <link bandwidth="10000000" id="Link_0300" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0301" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0302" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0303" latency="5E-4"/>
+        <link bandwidth="10000000000" id="Backbone_030" latency="0.1"/>
+        <route dst="Client_0300" src="CenterRouter_030">
+          <link_ctn id="Link_0300"/>
+        </route>
+        <route dst="Client_0301" src="CenterRouter_030">
+          <link_ctn id="Link_0301"/>
+        </route>
+        <route dst="Client_0302" src="CenterRouter_030">
+          <link_ctn id="Link_0302"/>
+        </route>
+        <route dst="Client_0303" src="CenterRouter_030">
+          <link_ctn id="Link_0303"/>
+        </route>
+        <route dst="Gateway_030" src="CenterRouter_030">
+          <link_ctn id="Backbone_030"/>
+        </route>
+      </AS>
+      <AS id="AS_031" routing="Full">
+        <router id="CenterRouter_031"/>
+        <router id="Gateway_031"/>
+        <host id="Client_0310" power="1000000000"/>
+        <host id="Client_0311" power="1000000000"/>
+        <host id="Client_0312" power="1000000000"/>
+        <host id="Client_0313" power="1000000000"/>
+        <link bandwidth="10000000" id="Link_0310" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0311" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0312" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0313" latency="5E-4"/>
+        <link bandwidth="10000000000" id="Backbone_031" latency="0.1"/>
+        <route dst="Client_0310" src="CenterRouter_031">
+          <link_ctn id="Link_0310"/>
+        </route>
+        <route dst="Client_0311" src="CenterRouter_031">
+          <link_ctn id="Link_0311"/>
+        </route>
+        <route dst="Client_0312" src="CenterRouter_031">
+          <link_ctn id="Link_0312"/>
+        </route>
+        <route dst="Client_0313" src="CenterRouter_031">
+          <link_ctn id="Link_0313"/>
+        </route>
+        <route dst="Gateway_031" src="CenterRouter_031">
+          <link_ctn id="Backbone_031"/>
+        </route>
+      </AS>
+      <AS id="AS_032" routing="Full">
+        <router id="CenterRouter_032"/>
+        <router id="Gateway_032"/>
+        <host id="Client_0320" power="1000000000"/>
+        <host id="Client_0321" power="1000000000"/>
+        <host id="Client_0322" power="1000000000"/>
+        <host id="Client_0323" power="1000000000"/>
+        <link bandwidth="10000000" id="Link_0320" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0321" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0322" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0323" latency="5E-4"/>
+        <link bandwidth="10000000000" id="Backbone_032" latency="0.1"/>
+        <route dst="Client_0320" src="CenterRouter_032">
+          <link_ctn id="Link_0320"/>
+        </route>
+        <route dst="Client_0321" src="CenterRouter_032">
+          <link_ctn id="Link_0321"/>
+        </route>
+        <route dst="Client_0322" src="CenterRouter_032">
+          <link_ctn id="Link_0322"/>
+        </route>
+        <route dst="Client_0323" src="CenterRouter_032">
+          <link_ctn id="Link_0323"/>
+        </route>
+        <route dst="Gateway_032" src="CenterRouter_032">
+          <link_ctn id="Backbone_032"/>
+        </route>
+      </AS>
+      <AS id="AS_033" routing="Full">
+        <router id="CenterRouter_033"/>
+        <router id="Gateway_033"/>
+        <host id="Client_0330" power="1000000000"/>
+        <host id="Client_0331" power="1000000000"/>
+        <host id="Client_0332" power="1000000000"/>
+        <host id="Client_0333" power="1000000000"/>
+        <link bandwidth="10000000" id="Link_0330" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0331" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0332" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0333" latency="5E-4"/>
+        <link bandwidth="10000000000" id="Backbone_033" latency="0.1"/>
+        <route dst="Client_0330" src="CenterRouter_033">
+          <link_ctn id="Link_0330"/>
+        </route>
+        <route dst="Client_0331" src="CenterRouter_033">
+          <link_ctn id="Link_0331"/>
+        </route>
+        <route dst="Client_0332" src="CenterRouter_033">
+          <link_ctn id="Link_0332"/>
+        </route>
+        <route dst="Client_0333" src="CenterRouter_033">
+          <link_ctn id="Link_0333"/>
+        </route>
+        <route dst="Gateway_033" src="CenterRouter_033">
+          <link_ctn id="Backbone_033"/>
+        </route>
+      </AS>
+      <router id="CenterRouter_03"/>
+      <router id="Gateway_03"/>
+      <host id="Server_03" power="1000000000"/>
+      <link bandwidth="10000000000" id="Backbone_03" latency="0.1"/>
+      <link bandwidth="1000000000" id="Serverlink_03" latency="5E-3"/>
+      <link bandwidth="10000000000" id="Link_030" latency="0.1"/>
+      <link bandwidth="10000000000" id="Link_031" latency="0.1"/>
+      <link bandwidth="10000000000" id="Link_032" latency="0.1"/>
+      <link bandwidth="10000000000" id="Link_033" latency="0.1"/>
+      <ASroute dst="AS_030" gw_dst="Gateway_030" gw_src="Gateway_03" src="AS_03">
+        <link_ctn id="Link_030"/>
+      </ASroute>
+      <ASroute dst="AS_031" gw_dst="Gateway_031" gw_src="Gateway_03" src="AS_03">
+        <link_ctn id="Link_031"/>
+      </ASroute>
+      <ASroute dst="AS_032" gw_dst="Gateway_032" gw_src="Gateway_03" src="AS_03">
+        <link_ctn id="Link_032"/>
+      </ASroute>
+      <ASroute dst="AS_033" gw_dst="Gateway_033" gw_src="Gateway_03" src="AS_03">
+        <link_ctn id="Link_033"/>
+      </ASroute>
+      <route dst="Gateway_03" src="CenterRouter_03">
+        <link_ctn id="Backbone_03"/>
+      </route>
+      <route dst="Server_03" src="CenterRouter_03">
+        <link_ctn id="Serverlink_03"/>
+      </route>
+    </AS>
+    <router id="CenterRouter_0"/>
+    <router id="Gateway_0"/>
+    <host id="Server_0" power="1000000000"/>
+    <link bandwidth="10000000000" id="Backbone_0" latency="0.1"/>
+    <link bandwidth="1000000000" id="Serverlink_0" latency="5E-3"/>
+    <link bandwidth="10000000000" id="Link_00" latency="0.1"/>
+    <link bandwidth="10000000000" id="Link_01" latency="0.1"/>
+    <link bandwidth="10000000000" id="Link_02" latency="0.1"/>
+    <link bandwidth="10000000000" id="Link_03" latency="0.1"/>
+    <ASroute dst="AS_00" gw_dst="Gateway_00" gw_src="Gateway_0" src="AS_0">
+      <link_ctn id="Link_00"/>
+    </ASroute>
+    <ASroute dst="AS_01" gw_dst="Gateway_01" gw_src="Gateway_0" src="AS_0">
+      <link_ctn id="Link_01"/>
+    </ASroute>
+    <ASroute dst="AS_02" gw_dst="Gateway_02" gw_src="Gateway_0" src="AS_0">
+      <link_ctn id="Link_02"/>
+    </ASroute>
+    <ASroute dst="AS_03" gw_dst="Gateway_03" gw_src="Gateway_0" src="AS_0">
+      <link_ctn id="Link_03"/>
+    </ASroute>
+    <route dst="Gateway_0" src="CenterRouter_0">
+      <link_ctn id="Backbone_0"/>
+    </route>
+    <route dst="Server_0" src="CenterRouter_0">
+      <link_ctn id="Serverlink_0"/>
+    </route>
+  </AS>
+</platform>
+

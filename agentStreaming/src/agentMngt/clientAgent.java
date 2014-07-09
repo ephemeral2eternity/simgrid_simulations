@@ -3,6 +3,8 @@ package agentMngt;
 import java.util.*;
 import java.lang.reflect.Array;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.File;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -25,6 +27,7 @@ public class clientAgent extends Process {
 	private Map<String, Integer> serverLevels;
 	private Map<String, Double> serverQoE;
 	private QoEComparator qoeCmp;
+	private PrintWriter rstFile;
 	private double[] curCoords = {0.0, 0.0};
 	private double buf;
 	private double startTime;
@@ -189,8 +192,9 @@ public class clientAgent extends Process {
 				nextLevel = 1;
 			}
 
-			Msg.info("Played: " + this.playTime + "; Seq: " + recvSTask.getNum() + "; Server: " + curServer +  "; QoE: " + curQoE + "; BW: " + bw + " kbps");
-			System.out.println(recvSTask.getNum() + ", " + curServer + ", "+ curQoE + ", " + bw);
+			Msg.info("Played: " + this.playTime + "; Seq: " + recvSTask.getNum() + "; Server: " + curServer +  "; QoE: " + curQoE + "; BW: " + bw + " kbps; Total Freeze: " + this.freezeTime + "; Level: " + curLevel);
+			// System.out.println(recvSTask.getNum() + ", " + curServer + ", "+ curQoE + ", " + bw);
+			this.rstFile.println(recvSTask.getNum() + ", " + curServer + ", "+ curQoE + ", " + bw + ", " + this.freezeTime + ", " + curLevel);
 			seq = recvSTask.getNum() + 1;
 			if (seq < 720)
 			{
@@ -226,6 +230,7 @@ public class clientAgent extends Process {
 				this.videoServers.add(this.cacheAgent);
 				this.serverLevels.put(this.cacheAgent, 7);
 				this.serverQoE.put(this.cacheAgent, 5.0);
+				this.rstFile = new PrintWriter(this.clientName + "_rst.csv");
 				for (int i = 1; i < inputArgs; i ++)
 				{
 					String server = Host.getByName(args[i]).getName();
@@ -233,8 +238,8 @@ public class clientAgent extends Process {
 					this.serverLevels.put(server, 6);
 					this.serverQoE.put(server, 4.0);
 				}
-			} catch (HostNotFoundException e) {
-				Msg.info("Invalid deployment file: " + e.toString());
+			} catch (HostNotFoundException | IOException e) {
+				Msg.info("Invalid deployment file OR Unable to create result file ");
 				System.exit(1);
 			}
 		}
@@ -259,7 +264,7 @@ public class clientAgent extends Process {
 			try {
 				recvTask = Task.receive(this.clientName, 1000);
 			} catch (TimeoutException e) {
-				// Msg.info("[Exception] Timeout exception in retrieving tasks!");
+				Msg.info("[Exception] Timeout exception in retrieving tasks!");
 				timeoutCnt ++;
 			}
 	
@@ -279,5 +284,6 @@ public class clientAgent extends Process {
 		}	
 
 		Msg.info("goodbye!");
+		this.rstFile.close();
 	}
 }
