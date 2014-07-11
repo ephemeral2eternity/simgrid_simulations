@@ -1,0 +1,5 @@
+This is an experiment to show how two QoE driven agent are competing for resources.
+They end up with choosing the same server though the other one is idling.
+That is why we need to introduce probalistic switching of server.
+
+Chen Wang, July, 10, 2014

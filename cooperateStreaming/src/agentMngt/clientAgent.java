@@ -52,7 +52,7 @@ public class clientAgent extends Process {
 		this.curSeq = 0;
 	}
 
-	public Comm request(String cacheServer, int num, int level) throws MsgException
+	public void request(String cacheServer, int num, int level) throws MsgException
 	{
 		double msgSz = 0;
 		double computeDuration = 0;
@@ -64,7 +64,8 @@ public class clientAgent extends Process {
 		request.setNum(num);
 		request.setIsRequest(true);
 		Comm comm = request.isend(cacheServer);
-		return comm;
+		this.comms.add(comm);
+		// return comm;
 	}
 
 	public int findNextLevel(double bw)
@@ -135,10 +136,18 @@ public class clientAgent extends Process {
 
 	public void updateQoE(String server, double qoe)
 	{
-		double alpha = 0.6;   // A higher alpha discounts older observations faster.
+		double alpha = 0.5;   // A higher alpha discounts older observations faster.
 		double preQoE = this.serverQoE.get(server);
 		double newQoE = qoe * alpha + (1 - alpha) * preQoE;
 		this.serverQoE.put(server, newQoE);
+
+		// Send QoE to the cache agent.
+		try {
+			Comm updateComm = QoETask.sendQoEUpdate(this.cacheAgent, server, qoe);
+			this.comms.add(updateComm);
+		} catch (MsgException e) {
+			Msg.info("Update message sent failure: " + e.toString());
+		}
 	}
 
 	public void updateQoECount(String server, double qoe)
@@ -151,6 +160,21 @@ public class clientAgent extends Process {
 		
 		this.qoeCount.put(server, goodQoECount);
 		// this.rstFile.println("## current QoE: " + qoe + ", current server good QoE count for server" + server + ": " + goodQoECount);
+	}
+
+	public void syncQoE(Task recvTask) 
+	{
+		String qoePair = "";
+		QoETask recvSyncQoE = (QoETask) recvTask;
+		Map<String, Double> rcvQoEMap = recvSyncQoE.getSyncQoE();
+		Iterator it = rcvQoEMap.entrySet().iterator();
+		while (it.hasNext())
+		{
+			Map.Entry<String, Double> pair = (Map.Entry<String, Double>) it.next();
+			this.serverQoE.put(pair.getKey(), pair.getValue());
+			qoePair = qoePair + pair.getKey() + " --> " + pair.getValue() + ", ";
+		}
+		this.rstFile.println("## current QoEs: " + qoePair);
 	}
 
 	public void processResponse(Task recvTask) throws HostFailureException, MsgException {
@@ -252,16 +276,8 @@ public class clientAgent extends Process {
 		return w;
 	}
 
-	public void main(String[] args) throws MsgException {
+	public void parseArgs(String[] args) {
 		int inputArgs = args.length;
-		Task recvTask = null;
-		int timeoutCnt = 0;
-		double lambda = 1 / 100.0;
-		double waitTime = getWaitTime(lambda);
-
-		// Waitfor the next request of a video. 
-		waitFor(waitTime);
-		
 		if (inputArgs > 0)
 		{
 			try {
@@ -284,9 +300,23 @@ public class clientAgent extends Process {
 				System.exit(1);
 			}
 		}
+	}
+
+	public void main(String[] args) throws MsgException {
+		Task recvTask = null;
+		int timeoutCnt = 0;
+		double lambda = 1 / 100.0;
+		double waitTime = getWaitTime(lambda);
+
+		// Waitfor the next request of a video. 
+		waitFor(waitTime);
+
+		// Process input arguments
+		this.parseArgs(args);
+		
 		Msg.info(printMap(this.serverLevels));
 		this.qoeCmp = new QoEComparator(this.serverQoE);
-		this.comms.add(request(this.cacheAgent, this.curSeq, this.serverLevels.get(this.cacheAgent)));
+		this.request(this.cacheAgent, this.curSeq, this.serverLevels.get(this.cacheAgent));
 
 		while (true){
 			recvTask = null;	
@@ -316,6 +346,11 @@ public class clientAgent extends Process {
 				if (recvTask instanceof StreamingTask)
 				{
 					processResponse(recvTask);
+				}
+				else if (recvTask instanceof QoETask)
+				{
+					// Get new QoE values for all candidate servers.
+					syncQoE(recvTask);
 				}
 			}
 
