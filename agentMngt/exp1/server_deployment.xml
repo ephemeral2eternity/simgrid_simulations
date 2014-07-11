@@ -1,0 +1,20 @@
+<?xml version='1.0'?>
+<!DOCTYPE platform SYSTEM "http://simgrid.gforge.inria.fr/simgrid.dtd">
+
+<platform version="3">
+  <process function="agentMngt.cacheAgent" host="Server_0">
+    <argument value="exp1/servers.csv"/>
+  </process>
+  <process function="agentMngt.cacheAgent" host="Server_00">
+    <argument value="exp1/servers.csv"/>
+  </process>
+  <process function="agentMngt.cacheAgent" host="Server_01">
+    <argument value="exp1/servers.csv"/>
+  </process>
+  <process function="agentMngt.cacheAgent" host="Server_02">
+    <argument value="exp1/servers.csv"/>
+  </process>
+  <process function="agentMngt.cacheAgent" host="Server_03">
+    <argument value="exp1/servers.csv"/>
+  </process>
+</platform>

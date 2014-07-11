@@ -230,7 +230,7 @@ public class clientAgent extends Process {
 				this.videoServers.add(this.cacheAgent);
 				this.serverLevels.put(this.cacheAgent, 7);
 				this.serverQoE.put(this.cacheAgent, 5.0);
-				this.rstFile = new PrintWriter(this.clientName + "_rst.csv");
+				this.rstFile = new PrintWriter("./data/" + this.clientName + "_rst.csv");
 				for (int i = 1; i < inputArgs; i ++)
 				{
 					String server = Host.getByName(args[i]).getName();

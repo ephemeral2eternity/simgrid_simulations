@@ -1,0 +1,8 @@
+This is the experiment testing vivaldi coordinates in a hierarchical topology
+with 5 servers on a 64 clients network.
+p = 3
+s = 5
+d = 4
+Totally there are 64 clients.
+
+Chen Wang, July 10, 2014

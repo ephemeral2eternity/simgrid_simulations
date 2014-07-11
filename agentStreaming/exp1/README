@@ -1,0 +1,5 @@
+This is an experiment showing how client agent switch to another server while the QoE is bad.
+It shows the client agent switches streaming server adaptively according to its own QoE.
+
+Chen Wang, July 4, 2014
+

@@ -1,0 +1,539 @@
+<?xml version='1.0'?>
+<!DOCTYPE platform SYSTEM "http://simgrid.gforge.inria.fr/simgrid.dtd">
+
+<platform version="3">
+  <AS id="AS_0" routing="Floyd">
+    <AS id="exitAS_0" routing="Full">
+      <router id="R_0"/>
+    </AS>
+    <AS id="AS_00" routing="Floyd">
+      <AS id="exitAS_00" routing="Full">
+        <router id="R_00"/>
+      </AS>
+      <AS id="AS_000" routing="Floyd">
+        <host id="Client_0000" power="1000000000"/>
+        <host id="Client_0001" power="1000000000"/>
+        <host id="Client_0002" power="1000000000"/>
+        <host id="Client_0003" power="1000000000"/>
+        <link bandwidth="10000000" id="Link_0000" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0001" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0002" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0003" latency="5E-4"/>
+        <router id="R_000"/>
+        <route dst="Client_0000" src="R_000" symmetrical="YES">
+          <link_ctn id="Link_0000"/>
+        </route>
+        <route dst="Client_0001" src="R_000" symmetrical="YES">
+          <link_ctn id="Link_0001"/>
+        </route>
+        <route dst="Client_0002" src="R_000" symmetrical="YES">
+          <link_ctn id="Link_0002"/>
+        </route>
+        <route dst="Client_0003" src="R_000" symmetrical="YES">
+          <link_ctn id="Link_0003"/>
+        </route>
+      </AS>
+      <AS id="AS_001" routing="Floyd">
+        <host id="Client_0010" power="1000000000"/>
+        <host id="Client_0011" power="1000000000"/>
+        <host id="Client_0012" power="1000000000"/>
+        <host id="Client_0013" power="1000000000"/>
+        <link bandwidth="10000000" id="Link_0010" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0011" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0012" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0013" latency="5E-4"/>
+        <router id="R_001"/>
+        <route dst="Client_0010" src="R_001" symmetrical="YES">
+          <link_ctn id="Link_0010"/>
+        </route>
+        <route dst="Client_0011" src="R_001" symmetrical="YES">
+          <link_ctn id="Link_0011"/>
+        </route>
+        <route dst="Client_0012" src="R_001" symmetrical="YES">
+          <link_ctn id="Link_0012"/>
+        </route>
+        <route dst="Client_0013" src="R_001" symmetrical="YES">
+          <link_ctn id="Link_0013"/>
+        </route>
+      </AS>
+      <AS id="AS_002" routing="Floyd">
+        <host id="Client_0020" power="1000000000"/>
+        <host id="Client_0021" power="1000000000"/>
+        <host id="Client_0022" power="1000000000"/>
+        <host id="Client_0023" power="1000000000"/>
+        <link bandwidth="10000000" id="Link_0020" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0021" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0022" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0023" latency="5E-4"/>
+        <router id="R_002"/>
+        <route dst="Client_0020" src="R_002" symmetrical="YES">
+          <link_ctn id="Link_0020"/>
+        </route>
+        <route dst="Client_0021" src="R_002" symmetrical="YES">
+          <link_ctn id="Link_0021"/>
+        </route>
+        <route dst="Client_0022" src="R_002" symmetrical="YES">
+          <link_ctn id="Link_0022"/>
+        </route>
+        <route dst="Client_0023" src="R_002" symmetrical="YES">
+          <link_ctn id="Link_0023"/>
+        </route>
+      </AS>
+      <AS id="AS_003" routing="Floyd">
+        <host id="Client_0030" power="1000000000"/>
+        <host id="Client_0031" power="1000000000"/>
+        <host id="Client_0032" power="1000000000"/>
+        <host id="Client_0033" power="1000000000"/>
+        <link bandwidth="10000000" id="Link_0030" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0031" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0032" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0033" latency="5E-4"/>
+        <router id="R_003"/>
+        <route dst="Client_0030" src="R_003" symmetrical="YES">
+          <link_ctn id="Link_0030"/>
+        </route>
+        <route dst="Client_0031" src="R_003" symmetrical="YES">
+          <link_ctn id="Link_0031"/>
+        </route>
+        <route dst="Client_0032" src="R_003" symmetrical="YES">
+          <link_ctn id="Link_0032"/>
+        </route>
+        <route dst="Client_0033" src="R_003" symmetrical="YES">
+          <link_ctn id="Link_0033"/>
+        </route>
+      </AS>
+      <AS id="serverAS_00" routing="Full">
+        <host id="Server_00" power="1000000000"/>
+        <link bandwidth="1000000000" id="ServerAcessLink_00" latency="0.002"/>
+        <router id="SRouter_00"/>
+        <route dst="Server_00" src="SRouter_00" symmetrical="YES">
+          <link_ctn id="ServerAcessLink_00"/>
+        </route>
+      </AS>
+      <link bandwidth="10000000000" id="BBServer_00" latency="0.001"/>
+      <link bandwidth="10000000000" id="BB_000" latency="0.001"/>
+      <link bandwidth="10000000000" id="BB_001" latency="0.001"/>
+      <link bandwidth="10000000000" id="BB_002" latency="0.001"/>
+      <link bandwidth="10000000000" id="BB_003" latency="0.001"/>
+      <ASroute dst="exitAS_00" gw_dst="R_00" gw_src="SRouter_00" src="serverAS_00" symmetrical="YES">
+        <link_ctn id="BBServer_00"/>
+      </ASroute>
+      <ASroute dst="exitAS_00" gw_dst="R_00" gw_src="R_000" src="AS_000" symmetrical="YES">
+        <link_ctn id="BB_000"/>
+      </ASroute>
+      <ASroute dst="exitAS_00" gw_dst="R_00" gw_src="R_001" src="AS_001" symmetrical="YES">
+        <link_ctn id="BB_001"/>
+      </ASroute>
+      <ASroute dst="exitAS_00" gw_dst="R_00" gw_src="R_002" src="AS_002" symmetrical="YES">
+        <link_ctn id="BB_002"/>
+      </ASroute>
+      <ASroute dst="exitAS_00" gw_dst="R_00" gw_src="R_003" src="AS_003" symmetrical="YES">
+        <link_ctn id="BB_003"/>
+      </ASroute>
+    </AS>
+    <AS id="AS_01" routing="Floyd">
+      <AS id="exitAS_01" routing="Full">
+        <router id="R_01"/>
+      </AS>
+      <AS id="AS_010" routing="Floyd">
+        <host id="Client_0100" power="1000000000"/>
+        <host id="Client_0101" power="1000000000"/>
+        <host id="Client_0102" power="1000000000"/>
+        <host id="Client_0103" power="1000000000"/>
+        <link bandwidth="10000000" id="Link_0100" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0101" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0102" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0103" latency="5E-4"/>
+        <router id="R_010"/>
+        <route dst="Client_0100" src="R_010" symmetrical="YES">
+          <link_ctn id="Link_0100"/>
+        </route>
+        <route dst="Client_0101" src="R_010" symmetrical="YES">
+          <link_ctn id="Link_0101"/>
+        </route>
+        <route dst="Client_0102" src="R_010" symmetrical="YES">
+          <link_ctn id="Link_0102"/>
+        </route>
+        <route dst="Client_0103" src="R_010" symmetrical="YES">
+          <link_ctn id="Link_0103"/>
+        </route>
+      </AS>
+      <AS id="AS_011" routing="Floyd">
+        <host id="Client_0110" power="1000000000"/>
+        <host id="Client_0111" power="1000000000"/>
+        <host id="Client_0112" power="1000000000"/>
+        <host id="Client_0113" power="1000000000"/>
+        <link bandwidth="10000000" id="Link_0110" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0111" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0112" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0113" latency="5E-4"/>
+        <router id="R_011"/>
+        <route dst="Client_0110" src="R_011" symmetrical="YES">
+          <link_ctn id="Link_0110"/>
+        </route>
+        <route dst="Client_0111" src="R_011" symmetrical="YES">
+          <link_ctn id="Link_0111"/>
+        </route>
+        <route dst="Client_0112" src="R_011" symmetrical="YES">
+          <link_ctn id="Link_0112"/>
+        </route>
+        <route dst="Client_0113" src="R_011" symmetrical="YES">
+          <link_ctn id="Link_0113"/>
+        </route>
+      </AS>
+      <AS id="AS_012" routing="Floyd">
+        <host id="Client_0120" power="1000000000"/>
+        <host id="Client_0121" power="1000000000"/>
+        <host id="Client_0122" power="1000000000"/>
+        <host id="Client_0123" power="1000000000"/>
+        <link bandwidth="10000000" id="Link_0120" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0121" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0122" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0123" latency="5E-4"/>
+        <router id="R_012"/>
+        <route dst="Client_0120" src="R_012" symmetrical="YES">
+          <link_ctn id="Link_0120"/>
+        </route>
+        <route dst="Client_0121" src="R_012" symmetrical="YES">
+          <link_ctn id="Link_0121"/>
+        </route>
+        <route dst="Client_0122" src="R_012" symmetrical="YES">
+          <link_ctn id="Link_0122"/>
+        </route>
+        <route dst="Client_0123" src="R_012" symmetrical="YES">
+          <link_ctn id="Link_0123"/>
+        </route>
+      </AS>
+      <AS id="AS_013" routing="Floyd">
+        <host id="Client_0130" power="1000000000"/>
+        <host id="Client_0131" power="1000000000"/>
+        <host id="Client_0132" power="1000000000"/>
+        <host id="Client_0133" power="1000000000"/>
+        <link bandwidth="10000000" id="Link_0130" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0131" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0132" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0133" latency="5E-4"/>
+        <router id="R_013"/>
+        <route dst="Client_0130" src="R_013" symmetrical="YES">
+          <link_ctn id="Link_0130"/>
+        </route>
+        <route dst="Client_0131" src="R_013" symmetrical="YES">
+          <link_ctn id="Link_0131"/>
+        </route>
+        <route dst="Client_0132" src="R_013" symmetrical="YES">
+          <link_ctn id="Link_0132"/>
+        </route>
+        <route dst="Client_0133" src="R_013" symmetrical="YES">
+          <link_ctn id="Link_0133"/>
+        </route>
+      </AS>
+      <AS id="serverAS_01" routing="Full">
+        <host id="Server_01" power="1000000000"/>
+        <link bandwidth="1000000000" id="ServerAcessLink_01" latency="0.002"/>
+        <router id="SRouter_01"/>
+        <route dst="Server_01" src="SRouter_01" symmetrical="YES">
+          <link_ctn id="ServerAcessLink_01"/>
+        </route>
+      </AS>
+      <link bandwidth="10000000000" id="BBServer_01" latency="0.001"/>
+      <link bandwidth="10000000000" id="BB_010" latency="0.001"/>
+      <link bandwidth="10000000000" id="BB_011" latency="0.001"/>
+      <link bandwidth="10000000000" id="BB_012" latency="0.001"/>
+      <link bandwidth="10000000000" id="BB_013" latency="0.001"/>
+      <ASroute dst="exitAS_01" gw_dst="R_01" gw_src="SRouter_01" src="serverAS_01" symmetrical="YES">
+        <link_ctn id="BBServer_01"/>
+      </ASroute>
+      <ASroute dst="exitAS_01" gw_dst="R_01" gw_src="R_010" src="AS_010" symmetrical="YES">
+        <link_ctn id="BB_010"/>
+      </ASroute>
+      <ASroute dst="exitAS_01" gw_dst="R_01" gw_src="R_011" src="AS_011" symmetrical="YES">
+        <link_ctn id="BB_011"/>
+      </ASroute>
+      <ASroute dst="exitAS_01" gw_dst="R_01" gw_src="R_012" src="AS_012" symmetrical="YES">
+        <link_ctn id="BB_012"/>
+      </ASroute>
+      <ASroute dst="exitAS_01" gw_dst="R_01" gw_src="R_013" src="AS_013" symmetrical="YES">
+        <link_ctn id="BB_013"/>
+      </ASroute>
+    </AS>
+    <AS id="AS_02" routing="Floyd">
+      <AS id="exitAS_02" routing="Full">
+        <router id="R_02"/>
+      </AS>
+      <AS id="AS_020" routing="Floyd">
+        <host id="Client_0200" power="1000000000"/>
+        <host id="Client_0201" power="1000000000"/>
+        <host id="Client_0202" power="1000000000"/>
+        <host id="Client_0203" power="1000000000"/>
+        <link bandwidth="10000000" id="Link_0200" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0201" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0202" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0203" latency="5E-4"/>
+        <router id="R_020"/>
+        <route dst="Client_0200" src="R_020" symmetrical="YES">
+          <link_ctn id="Link_0200"/>
+        </route>
+        <route dst="Client_0201" src="R_020" symmetrical="YES">
+          <link_ctn id="Link_0201"/>
+        </route>
+        <route dst="Client_0202" src="R_020" symmetrical="YES">
+          <link_ctn id="Link_0202"/>
+        </route>
+        <route dst="Client_0203" src="R_020" symmetrical="YES">
+          <link_ctn id="Link_0203"/>
+        </route>
+      </AS>
+      <AS id="AS_021" routing="Floyd">
+        <host id="Client_0210" power="1000000000"/>
+        <host id="Client_0211" power="1000000000"/>
+        <host id="Client_0212" power="1000000000"/>
+        <host id="Client_0213" power="1000000000"/>
+        <link bandwidth="10000000" id="Link_0210" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0211" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0212" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0213" latency="5E-4"/>
+        <router id="R_021"/>
+        <route dst="Client_0210" src="R_021" symmetrical="YES">
+          <link_ctn id="Link_0210"/>
+        </route>
+        <route dst="Client_0211" src="R_021" symmetrical="YES">
+          <link_ctn id="Link_0211"/>
+        </route>
+        <route dst="Client_0212" src="R_021" symmetrical="YES">
+          <link_ctn id="Link_0212"/>
+        </route>
+        <route dst="Client_0213" src="R_021" symmetrical="YES">
+          <link_ctn id="Link_0213"/>
+        </route>
+      </AS>
+      <AS id="AS_022" routing="Floyd">
+        <host id="Client_0220" power="1000000000"/>
+        <host id="Client_0221" power="1000000000"/>
+        <host id="Client_0222" power="1000000000"/>
+        <host id="Client_0223" power="1000000000"/>
+        <link bandwidth="10000000" id="Link_0220" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0221" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0222" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0223" latency="5E-4"/>
+        <router id="R_022"/>
+        <route dst="Client_0220" src="R_022" symmetrical="YES">
+          <link_ctn id="Link_0220"/>
+        </route>
+        <route dst="Client_0221" src="R_022" symmetrical="YES">
+          <link_ctn id="Link_0221"/>
+        </route>
+        <route dst="Client_0222" src="R_022" symmetrical="YES">
+          <link_ctn id="Link_0222"/>
+        </route>
+        <route dst="Client_0223" src="R_022" symmetrical="YES">
+          <link_ctn id="Link_0223"/>
+        </route>
+      </AS>
+      <AS id="AS_023" routing="Floyd">
+        <host id="Client_0230" power="1000000000"/>
+        <host id="Client_0231" power="1000000000"/>
+        <host id="Client_0232" power="1000000000"/>
+        <host id="Client_0233" power="1000000000"/>
+        <link bandwidth="10000000" id="Link_0230" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0231" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0232" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0233" latency="5E-4"/>
+        <router id="R_023"/>
+        <route dst="Client_0230" src="R_023" symmetrical="YES">
+          <link_ctn id="Link_0230"/>
+        </route>
+        <route dst="Client_0231" src="R_023" symmetrical="YES">
+          <link_ctn id="Link_0231"/>
+        </route>
+        <route dst="Client_0232" src="R_023" symmetrical="YES">
+          <link_ctn id="Link_0232"/>
+        </route>
+        <route dst="Client_0233" src="R_023" symmetrical="YES">
+          <link_ctn id="Link_0233"/>
+        </route>
+      </AS>
+      <AS id="serverAS_02" routing="Full">
+        <host id="Server_02" power="1000000000"/>
+        <link bandwidth="1000000000" id="ServerAcessLink_02" latency="0.002"/>
+        <router id="SRouter_02"/>
+        <route dst="Server_02" src="SRouter_02" symmetrical="YES">
+          <link_ctn id="ServerAcessLink_02"/>
+        </route>
+      </AS>
+      <link bandwidth="10000000000" id="BBServer_02" latency="0.001"/>
+      <link bandwidth="10000000000" id="BB_020" latency="0.001"/>
+      <link bandwidth="10000000000" id="BB_021" latency="0.001"/>
+      <link bandwidth="10000000000" id="BB_022" latency="0.001"/>
+      <link bandwidth="10000000000" id="BB_023" latency="0.001"/>
+      <ASroute dst="exitAS_02" gw_dst="R_02" gw_src="SRouter_02" src="serverAS_02" symmetrical="YES">
+        <link_ctn id="BBServer_02"/>
+      </ASroute>
+      <ASroute dst="exitAS_02" gw_dst="R_02" gw_src="R_020" src="AS_020" symmetrical="YES">
+        <link_ctn id="BB_020"/>
+      </ASroute>
+      <ASroute dst="exitAS_02" gw_dst="R_02" gw_src="R_021" src="AS_021" symmetrical="YES">
+        <link_ctn id="BB_021"/>
+      </ASroute>
+      <ASroute dst="exitAS_02" gw_dst="R_02" gw_src="R_022" src="AS_022" symmetrical="YES">
+        <link_ctn id="BB_022"/>
+      </ASroute>
+      <ASroute dst="exitAS_02" gw_dst="R_02" gw_src="R_023" src="AS_023" symmetrical="YES">
+        <link_ctn id="BB_023"/>
+      </ASroute>
+    </AS>
+    <AS id="AS_03" routing="Floyd">
+      <AS id="exitAS_03" routing="Full">
+        <router id="R_03"/>
+      </AS>
+      <AS id="AS_030" routing="Floyd">
+        <host id="Client_0300" power="1000000000"/>
+        <host id="Client_0301" power="1000000000"/>
+        <host id="Client_0302" power="1000000000"/>
+        <host id="Client_0303" power="1000000000"/>
+        <link bandwidth="10000000" id="Link_0300" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0301" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0302" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0303" latency="5E-4"/>
+        <router id="R_030"/>
+        <route dst="Client_0300" src="R_030" symmetrical="YES">
+          <link_ctn id="Link_0300"/>
+        </route>
+        <route dst="Client_0301" src="R_030" symmetrical="YES">
+          <link_ctn id="Link_0301"/>
+        </route>
+        <route dst="Client_0302" src="R_030" symmetrical="YES">
+          <link_ctn id="Link_0302"/>
+        </route>
+        <route dst="Client_0303" src="R_030" symmetrical="YES">
+          <link_ctn id="Link_0303"/>
+        </route>
+      </AS>
+      <AS id="AS_031" routing="Floyd">
+        <host id="Client_0310" power="1000000000"/>
+        <host id="Client_0311" power="1000000000"/>
+        <host id="Client_0312" power="1000000000"/>
+        <host id="Client_0313" power="1000000000"/>
+        <link bandwidth="10000000" id="Link_0310" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0311" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0312" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0313" latency="5E-4"/>
+        <router id="R_031"/>
+        <route dst="Client_0310" src="R_031" symmetrical="YES">
+          <link_ctn id="Link_0310"/>
+        </route>
+        <route dst="Client_0311" src="R_031" symmetrical="YES">
+          <link_ctn id="Link_0311"/>
+        </route>
+        <route dst="Client_0312" src="R_031" symmetrical="YES">
+          <link_ctn id="Link_0312"/>
+        </route>
+        <route dst="Client_0313" src="R_031" symmetrical="YES">
+          <link_ctn id="Link_0313"/>
+        </route>
+      </AS>
+      <AS id="AS_032" routing="Floyd">
+        <host id="Client_0320" power="1000000000"/>
+        <host id="Client_0321" power="1000000000"/>
+        <host id="Client_0322" power="1000000000"/>
+        <host id="Client_0323" power="1000000000"/>
+        <link bandwidth="10000000" id="Link_0320" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0321" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0322" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0323" latency="5E-4"/>
+        <router id="R_032"/>
+        <route dst="Client_0320" src="R_032" symmetrical="YES">
+          <link_ctn id="Link_0320"/>
+        </route>
+        <route dst="Client_0321" src="R_032" symmetrical="YES">
+          <link_ctn id="Link_0321"/>
+        </route>
+        <route dst="Client_0322" src="R_032" symmetrical="YES">
+          <link_ctn id="Link_0322"/>
+        </route>
+        <route dst="Client_0323" src="R_032" symmetrical="YES">
+          <link_ctn id="Link_0323"/>
+        </route>
+      </AS>
+      <AS id="AS_033" routing="Floyd">
+        <host id="Client_0330" power="1000000000"/>
+        <host id="Client_0331" power="1000000000"/>
+        <host id="Client_0332" power="1000000000"/>
+        <host id="Client_0333" power="1000000000"/>
+        <link bandwidth="10000000" id="Link_0330" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0331" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0332" latency="5E-4"/>
+        <link bandwidth="10000000" id="Link_0333" latency="5E-4"/>
+        <router id="R_033"/>
+        <route dst="Client_0330" src="R_033" symmetrical="YES">
+          <link_ctn id="Link_0330"/>
+        </route>
+        <route dst="Client_0331" src="R_033" symmetrical="YES">
+          <link_ctn id="Link_0331"/>
+        </route>
+        <route dst="Client_0332" src="R_033" symmetrical="YES">
+          <link_ctn id="Link_0332"/>
+        </route>
+        <route dst="Client_0333" src="R_033" symmetrical="YES">
+          <link_ctn id="Link_0333"/>
+        </route>
+      </AS>
+      <AS id="serverAS_03" routing="Full">
+        <host id="Server_03" power="1000000000"/>
+        <link bandwidth="1000000000" id="ServerAcessLink_03" latency="0.002"/>
+        <router id="SRouter_03"/>
+        <route dst="Server_03" src="SRouter_03" symmetrical="YES">
+          <link_ctn id="ServerAcessLink_03"/>
+        </route>
+      </AS>
+      <link bandwidth="10000000000" id="BBServer_03" latency="0.001"/>
+      <link bandwidth="10000000000" id="BB_030" latency="0.001"/>
+      <link bandwidth="10000000000" id="BB_031" latency="0.001"/>
+      <link bandwidth="10000000000" id="BB_032" latency="0.001"/>
+      <link bandwidth="10000000000" id="BB_033" latency="0.001"/>
+      <ASroute dst="exitAS_03" gw_dst="R_03" gw_src="SRouter_03" src="serverAS_03" symmetrical="YES">
+        <link_ctn id="BBServer_03"/>
+      </ASroute>
+      <ASroute dst="exitAS_03" gw_dst="R_03" gw_src="R_030" src="AS_030" symmetrical="YES">
+        <link_ctn id="BB_030"/>
+      </ASroute>
+      <ASroute dst="exitAS_03" gw_dst="R_03" gw_src="R_031" src="AS_031" symmetrical="YES">
+        <link_ctn id="BB_031"/>
+      </ASroute>
+      <ASroute dst="exitAS_03" gw_dst="R_03" gw_src="R_032" src="AS_032" symmetrical="YES">
+        <link_ctn id="BB_032"/>
+      </ASroute>
+      <ASroute dst="exitAS_03" gw_dst="R_03" gw_src="R_033" src="AS_033" symmetrical="YES">
+        <link_ctn id="BB_033"/>
+      </ASroute>
+    </AS>
+    <AS id="serverAS_0" routing="Full">
+      <host id="Server_0" power="1000000000"/>
+      <link bandwidth="1000000000" id="ServerAcessLink_0" latency="0.002"/>
+      <router id="SRouter_0"/>
+      <route dst="Server_0" src="SRouter_0" symmetrical="YES">
+        <link_ctn id="ServerAcessLink_0"/>
+      </route>
+    </AS>
+    <link bandwidth="10000000000" id="BBServer_0" latency="0.001"/>
+    <link bandwidth="10000000000" id="BB_00" latency="0.05"/>
+    <link bandwidth="10000000000" id="BB_01" latency="0.05"/>
+    <link bandwidth="10000000000" id="BB_02" latency="0.05"/>
+    <link bandwidth="10000000000" id="BB_03" latency="0.05"/>
+    <ASroute dst="exitAS_0" gw_dst="R_0" gw_src="SRouter_0" src="serverAS_0" symmetrical="YES">
+      <link_ctn id="BBServer_0"/>
+    </ASroute>
+    <ASroute dst="exitAS_0" gw_dst="R_0" gw_src="R_00" src="AS_00" symmetrical="YES">
+      <link_ctn id="BB_00"/>
+    </ASroute>
+    <ASroute dst="exitAS_0" gw_dst="R_0" gw_src="R_01" src="AS_01" symmetrical="YES">
+      <link_ctn id="BB_01"/>
+    </ASroute>
+    <ASroute dst="exitAS_0" gw_dst="R_0" gw_src="R_02" src="AS_02" symmetrical="YES">
+      <link_ctn id="BB_02"/>
+    </ASroute>
+    <ASroute dst="exitAS_0" gw_dst="R_0" gw_src="R_03" src="AS_03" symmetrical="YES">
+      <link_ctn id="BB_03"/>
+    </ASroute>
+  </AS>
+</platform>
+
