@@ -172,9 +172,9 @@ public class clientAgent extends Process {
 		{
 			Map.Entry<String, Double> pair = (Map.Entry<String, Double>) it.next();
 			this.serverQoE.put(pair.getKey(), pair.getValue());
-			qoePair = qoePair + pair.getKey() + " --> " + pair.getValue() + ", ";
+			// qoePair = qoePair + pair.getKey() + " --> " + pair.getValue() + ", ";
 		}
-		this.rstFile.println("## current QoEs: " + qoePair);
+		// this.rstFile.println("## current QoEs: " + qoePair);
 	}
 
 	public void processResponse(Task recvTask) throws HostFailureException, MsgException {

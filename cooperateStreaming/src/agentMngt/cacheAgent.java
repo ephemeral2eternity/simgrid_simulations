@@ -55,11 +55,12 @@ public class cacheAgent extends Process {
 		return comm;
 	}
 
-	public void updateServerQoE(String upd_server, Double upd_qoe)
+	public void updateServerQoE(String upd_server, double upd_qoe)
 	{
 		double alpha = 0.5;
 		double preQoE = this.serverQoE.get(upd_server);
 		double newQoE = upd_qoe * alpha + (1 - alpha) * preQoE;
+		Msg.info("Previous value for server " + upd_server + " is " + preQoE + " and updated qoe value is " + upd_qoe);
 		this.serverQoE.put(upd_server, newQoE);
 	}
 
@@ -72,10 +73,12 @@ public class cacheAgent extends Process {
 		if (inputArgs > 0)
 		{
 			try {
+				this.serverQoE.put(this.hostName, 5.0);
 				for (int i = 0; i < inputArgs; i ++)
 				{
 					String server = Host.getByName(args[i]).getName();
 					this.serverQoE.put(server, 5.0);
+					Msg.info("Put qoe = 5.0 to server " + server);
 				}
 			} catch (HostNotFoundException e) {
 				Msg.info("Invalid input arguments for cacheAgent in deployment file: " + e.toString());
@@ -114,7 +117,10 @@ public class cacheAgent extends Process {
 				else if (recvTask instanceof QoETask)
 				{
 					QoETask recvUpdate = (QoETask) recvTask;
-					this.updateServerQoE(recvUpdate.getUpdateServer(), recvUpdate.getUpdateQoE());
+					String update_server = recvUpdate.getUpdateServer();
+					double update_qoe = recvUpdate.getUpdateQoE();
+					Msg.info("Received updating QoE for Server: " + update_server + " with qoe: " + update_qoe);
+					this.updateServerQoE(update_server, update_qoe);
 					try {
 						Comm syncComm = QoETask.sendQoESync(recvUpdate.getSenderName(), this.serverQoE);
 						this.comms.add(syncComm);
