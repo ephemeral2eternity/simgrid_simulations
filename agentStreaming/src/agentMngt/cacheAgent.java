@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.lang.reflect.Array;
 import java.util.Map;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -23,6 +24,7 @@ public class cacheAgent extends Process {
 	private ArrayList<Comm> comms;
 	private String hostName;
 	private double[] curCoords = {0.0, 0.0};
+	private PrintWriter rstFile;
 	static private double[] bitrates = {400.0, 628.0, 986.0, 1549.0, 2433.0, 3821.0, 6000.0};
 	static private double CHUNKLEN = 5.0;
 	
@@ -39,7 +41,7 @@ public class cacheAgent extends Process {
 		StreamingTask recvRequest = (StreamingTask) request;
 		int rcvLevel = recvRequest.getLevel();
 		msgSz = bitrates[rcvLevel - 1] * 1024 * 5;
-		//double time = Msg.getClock();
+		double time = Msg.getClock();
 		StreamingTask data = new StreamingTask("Data", computeDuration, msgSz);
 		data.setTime(recvRequest.getTime());
 		// data.setTime(time);
@@ -48,7 +50,9 @@ public class cacheAgent extends Process {
 		data.setChunkLen(CHUNKLEN);
 		data.setNum(recvRequest.getNum());
 		data.setIsRequest(false);
-		Comm comm = data.isend(recvRequest.getSenderName());
+		String clientName = recvRequest.getSenderName();
+		Comm comm = data.isend(clientName);
+		this.rstFile.println(time + ", " + clientName + ", " + msgSz);
 		return comm;
 	}
 
@@ -56,7 +60,12 @@ public class cacheAgent extends Process {
 		Task recvTask = null;
 		int lvls = this.bitrates.length;
 		int timeoutCnt = 0;
-		
+		try {	
+			this.rstFile = new PrintWriter("./data/" + this.hostName + "_rst.csv");
+		} catch (IOException e) {
+			Msg.info("Unable to create result file for server: " + this.hostName);
+			System.exit(1);
+		}
 		while (true){
 			recvTask = null;	
 			for (int i = 0; i < this.comms.size(); i ++) {
@@ -93,5 +102,6 @@ public class cacheAgent extends Process {
 		}	
 
 		Msg.info("goodbye!");
+		this.rstFile.close();
 	}
 }
