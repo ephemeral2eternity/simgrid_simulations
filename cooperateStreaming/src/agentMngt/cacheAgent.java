@@ -4,6 +4,7 @@ import java.util.*;
 import java.lang.*;
 import java.lang.reflect.Array;
 import java.util.Map;
+import java.io.PrintWriter;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -25,6 +26,8 @@ public class cacheAgent extends Process {
 	private String hostName;
 	private double[] curCoords = {0.0, 0.0};
 	private Map<String, Double> serverQoE;
+	private PrintWriter trafficFile;
+	private PrintWriter qoeFile;
 	static private double[] bitrates = {400.0, 628.0, 986.0, 1549.0, 2433.0, 3821.0, 6000.0};
 	static private double CHUNKLEN = 5.0;
 	
@@ -42,25 +45,29 @@ public class cacheAgent extends Process {
 		StreamingTask recvRequest = (StreamingTask) request;
 		int rcvLevel = recvRequest.getLevel();
 		msgSz = bitrates[rcvLevel - 1] * 1024 * 5;
-		//double time = Msg.getClock();
+		double time = Msg.getClock();
 		StreamingTask data = new StreamingTask("Data", computeDuration, msgSz);
-		data.setTime(recvRequest.getTime());
-		// data.setTime(time);
+		// data.setTime(recvRequest.getTime());
+		data.setTime(time);
 		data.setLevel(rcvLevel);
 		// System.out.println("Server sent level: " + rcvLevel);
 		data.setChunkLen(CHUNKLEN);
 		data.setNum(recvRequest.getNum());
 		data.setIsRequest(false);
-		Comm comm = data.isend(recvRequest.getSenderName());
+		String clientName = recvRequest.getSenderName();
+		Comm comm = data.isend(clientName);
+		this.trafficFile.println(time + ", " + clientName + ", " + msgSz);
 		return comm;
 	}
 
 	public void updateServerQoE(String upd_server, double upd_qoe)
 	{
-		double alpha = 0.5;
+		double alpha = 0.2;
 		double preQoE = this.serverQoE.get(upd_server);
 		double newQoE = upd_qoe * alpha + (1 - alpha) * preQoE;
+		double time = Msg.getClock();
 		Msg.info("Previous value for server " + upd_server + " is " + preQoE + " and updated qoe value is " + upd_qoe);
+		this.qoeFile.println(time + ", " + upd_server + ", " + newQoE);
 		this.serverQoE.put(upd_server, newQoE);
 	}
 
@@ -70,6 +77,13 @@ public class cacheAgent extends Process {
 		int lvls = this.bitrates.length;
 		int timeoutCnt = 0;
 		
+		try {
+			this.trafficFile = new PrintWriter("./data/" + this.hostName + "_traffic.csv");
+			this.qoeFile = new PrintWriter("./data/" + this.hostName + "_qoe.csv");
+		} catch (IOException e) {
+			Msg.info("Unable to create result files for server: " + this.hostName);
+			System.exit(1);
+		}
 		if (inputArgs > 0)
 		{
 			try {
@@ -117,10 +131,15 @@ public class cacheAgent extends Process {
 				else if (recvTask instanceof QoETask)
 				{
 					QoETask recvUpdate = (QoETask) recvTask;
-					String update_server = recvUpdate.getUpdateServer();
-					double update_qoe = recvUpdate.getUpdateQoE();
-					Msg.info("Received updating QoE for Server: " + update_server + " with qoe: " + update_qoe);
-					this.updateServerQoE(update_server, update_qoe);
+					Map<String, Double> updateQoEmap = new HashMap<String, Double>(recvUpdate.getQoEList());
+					// double update_qoe = recvUpdate.getUpdateQoE();
+					// Msg.info("Received updating QoE for Server: " + update_server + " with qoe: " + update_qoe);
+					Iterator it = updateQoEmap.entrySet().iterator();
+					while (it.hasNext())
+					{
+						Map.Entry<String, Double> pair = (Map.Entry<String, Double>) it.next();
+						this.updateServerQoE(pair.getKey(), pair.getValue());
+					}
 					try {
 						Comm syncComm = QoETask.sendQoESync(recvUpdate.getSenderName(), this.serverQoE);
 						this.comms.add(syncComm);

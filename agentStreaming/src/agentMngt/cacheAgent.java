@@ -81,7 +81,7 @@ public class cacheAgent extends Process {
 			}
 		
 			try {
-				recvTask = Task.receive(this.hostName, 1000);
+				recvTask = Task.receive(this.hostName, 10000);
 			} catch (TimeoutException e) {
 				// Msg.info("[Exception] Timeout exception in retrieving tasks!");
 				timeoutCnt ++;

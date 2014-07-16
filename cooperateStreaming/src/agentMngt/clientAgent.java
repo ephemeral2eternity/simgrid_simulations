@@ -134,7 +134,7 @@ public class clientAgent extends Process {
 		return qoe;
 	}
 
-	public void updateQoE(String server, double qoe)
+	public void updateQoE(String server, double qoe, boolean cooperation)
 	{
 		double alpha = 0.5;   // A higher alpha discounts older observations faster.
 		double preQoE = this.serverQoE.get(server);
@@ -142,11 +142,13 @@ public class clientAgent extends Process {
 		this.serverQoE.put(server, newQoE);
 
 		// Send QoE to the cache agent.
-		try {
-			Comm updateComm = QoETask.sendQoEUpdate(this.cacheAgent, server, qoe);
-			this.comms.add(updateComm);
-		} catch (MsgException e) {
-			Msg.info("Update message sent failure: " + e.toString());
+		if (cooperation) {
+			try {
+				Comm updateComm = QoETask.sendQoEUpdate(this.cacheAgent, this.serverQoE);
+				this.comms.add(updateComm);
+			} catch (MsgException e) {
+				Msg.info("Update message sent failure: " + e.toString());
+			}
 		}
 	}
 
@@ -166,7 +168,7 @@ public class clientAgent extends Process {
 	{
 		String qoePair = "";
 		QoETask recvSyncQoE = (QoETask) recvTask;
-		Map<String, Double> rcvQoEMap = recvSyncQoE.getSyncQoE();
+		Map<String, Double> rcvQoEMap = recvSyncQoE.getQoEList();
 		Iterator it = rcvQoEMap.entrySet().iterator();
 		while (it.hasNext())
 		{
@@ -186,6 +188,7 @@ public class clientAgent extends Process {
 		String curServer, nextServer;
 		int curLevel, nextLevel;
 		int lvls = this.bitrates.length;
+		boolean cooperate = false;
 
 		StreamingTask recvSTask = (StreamingTask) recvTask;
 		if (!recvSTask.getIsRequest())
@@ -226,7 +229,10 @@ public class clientAgent extends Process {
 			updateQoECount(curServer, curQoE);
 			
 			nextQoE = computeQoE(nextFreezing, nextLevel);
-			updateQoE(curServer, curQoE);
+		
+			if (recvSTask.getNum() % 100  == 0)
+				cooperate = true;
+			updateQoE(curServer, curQoE, cooperate);
 
 			// Find next best server to serve next chunk.
 			nextServer = findNextServer(curServer, nextQoE);

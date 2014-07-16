@@ -18,7 +18,7 @@ public class QoETask extends PingPongTask {
 
    private String updateServer;
    private double updateQoE;
-   private Map<String, Double> syncQoEList;
+   private Map<String, Double> qoeList;
    private boolean isUpdate;
    
    public QoETask(String name, double computeDuration, double messageSize) throws NativeException {
@@ -41,14 +41,14 @@ public class QoETask extends PingPongTask {
 	return this.updateServer;
    }
 
-   public void setSyncQoE(Map<String, Double> qoeMap)
+   public void setQoEList(Map<String, Double> qoeMap)
    {
-	this.syncQoEList = new HashMap<String, Double>(qoeMap);
+	this.qoeList = new HashMap<String, Double>(qoeMap);
    }
 
-   public Map<String, Double> getSyncQoE()
+   public Map<String, Double> getQoEList()
    {
-	return this.syncQoEList;
+	return this.qoeList;
    }
 
    public void setIsUpdate(boolean is_update)
@@ -70,13 +70,13 @@ public class QoETask extends PingPongTask {
         QoETask syncTask = new QoETask("QoE_Sync", computeDuration, msgSz);
         syncTask.setIsUpdate(false);
         syncTask.setTime(time);
-	syncTask.setSyncQoE(qoeMap);
+	syncTask.setQoEList(qoeMap);
         Comm comm = syncTask.isend(sender);
 
         return comm;
    }
 
-   public static Comm sendQoEUpdate(String cacheAgent, String update_server, double update_qoe) throws MsgException
+   public static Comm sendQoEUpdate(String cacheAgent, Map<String, Double> update_qoe_map) throws MsgException
    {
 	double msgSz = 0;
         double computeDuration = 0;
@@ -85,7 +85,7 @@ public class QoETask extends PingPongTask {
         QoETask updateTask = new QoETask("QoE_Update", computeDuration, msgSz);
         updateTask.setIsUpdate(true);
         updateTask.setTime(time);
-        updateTask.setUpdate(update_server, update_qoe);
+        updateTask.setQoEList(update_qoe_map);
         Comm comm = updateTask.isend(cacheAgent);
         return comm;
    }
