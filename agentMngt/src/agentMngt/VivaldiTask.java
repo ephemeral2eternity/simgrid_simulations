@@ -46,8 +46,8 @@ public class VivaldiTask extends PingPongTask {
         String sender = this.getSenderName();
         VivaldiTask pongTask = new VivaldiTask("Pong", computeDuration, msgSz);
         pongTask.setIsPing(false);
-        pongTask.setTime(this.getTime());
-        // pongTask.setTime(time);
+        // pongTask.setTime(this.getTime());
+        pongTask.setTime(time);
 	pongTask.setVivaldi(newCoords);
 	pongTask.setError(diff);
         Comm comm = pongTask.isend(sender);

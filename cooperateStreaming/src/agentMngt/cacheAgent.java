@@ -24,8 +24,13 @@ public class cacheAgent extends Process {
 
 	private ArrayList<Comm> comms;
 	private String hostName;
+	private double load;
+	private double timeUnit;
+	private int timeUnitCnt;
+	private int qoeUpdateCnt;
 	private double[] curCoords = {0.0, 0.0};
 	private Map<String, Double> serverQoE;
+	private ArrayList<String> qoeHeader;
 	private PrintWriter trafficFile;
 	private PrintWriter qoeFile;
 	static private double[] bitrates = {400.0, 628.0, 986.0, 1549.0, 2433.0, 3821.0, 6000.0};
@@ -36,6 +41,37 @@ public class cacheAgent extends Process {
 		this.hostName = host.getName();
 		this.comms = new ArrayList<Comm>();
 		this.serverQoE = new HashMap<String, Double>();
+		this.qoeHeader = new ArrayList<String>();
+		this.timeUnit = 10.0;
+		this.timeUnitCnt = 1;
+		this.load = 0.0;
+		this.qoeUpdateCnt = 0;
+	}
+
+	public void computeLoad(double ts, double msgSz)
+	{
+		if (ts < (double) this.timeUnitCnt * this.timeUnit) {
+			this.load += msgSz / (double) this.timeUnitCnt;
+		}
+		else {
+			this.trafficFile.println(this.timeUnitCnt + ", " + this.load);
+			this.trafficFile.flush();
+			// this.writeServerQoE(ts);
+			this.load = 0.0;
+			this.timeUnitCnt ++;
+		}
+	}
+
+	public void writeServerQoE()
+	{
+		String qoes = "";
+		for (String server:this.qoeHeader)
+		{
+			String curQoE = String.format("%.3f", this.serverQoE.get(server));
+			qoes = qoes + curQoE + "\t";
+		}		
+		this.qoeFile.println(qoes);
+		this.qoeFile.flush();
 	}
 
 	public Comm processRequest(Task request) throws MsgException
@@ -47,16 +83,16 @@ public class cacheAgent extends Process {
 		msgSz = bitrates[rcvLevel - 1] * 1024 * 5;
 		double time = Msg.getClock();
 		StreamingTask data = new StreamingTask("Data", computeDuration, msgSz);
-		// data.setTime(recvRequest.getTime());
-		data.setTime(time);
+		data.setTime(recvRequest.getTime());
+		// data.setTime(time);
 		data.setLevel(rcvLevel);
 		// System.out.println("Server sent level: " + rcvLevel);
 		data.setChunkLen(CHUNKLEN);
 		data.setNum(recvRequest.getNum());
 		data.setIsRequest(false);
 		String clientName = recvRequest.getSenderName();
+		this.computeLoad(time, msgSz);
 		Comm comm = data.isend(clientName);
-		this.trafficFile.println(time + ", " + clientName + ", " + msgSz);
 		return comm;
 	}
 
@@ -67,9 +103,10 @@ public class cacheAgent extends Process {
 		double newQoE = upd_qoe * alpha + (1 - alpha) * preQoE;
 		double time = Msg.getClock();
 		Msg.info("Previous value for server " + upd_server + " is " + preQoE + " and updated qoe value is " + upd_qoe);
-		this.qoeFile.println(time + ", " + upd_server + ", " + newQoE);
+		// this.qoeFile.println(time + ", " + upd_server + ", " + newQoE);
 		this.serverQoE.put(upd_server, newQoE);
 	}
+
 
 	public void main(String[] args) throws MsgException {
 		int inputArgs = args.length;
@@ -88,12 +125,21 @@ public class cacheAgent extends Process {
 		{
 			try {
 				this.serverQoE.put(this.hostName, 5.0);
+				this.qoeHeader.add(this.hostName);
 				for (int i = 0; i < inputArgs; i ++)
 				{
 					String server = Host.getByName(args[i]).getName();
-					this.serverQoE.put(server, 5.0);
+					this.serverQoE.put(server, 4.5);
+					this.qoeHeader.add(server);
 					Msg.info("Put qoe = 5.0 to server " + server);
 				}
+				String qoeHeaderStr = "";
+				for (String server : this.qoeHeader)
+				{
+					qoeHeaderStr = qoeHeaderStr + server + "\t";
+				}
+				this.qoeFile.println(qoeHeaderStr);
+				this.qoeFile.flush();
 			} catch (HostNotFoundException e) {
 				Msg.info("Invalid input arguments for cacheAgent in deployment file: " + e.toString());
 				System.exit(1);
@@ -131,21 +177,25 @@ public class cacheAgent extends Process {
 				else if (recvTask instanceof QoETask)
 				{
 					QoETask recvUpdate = (QoETask) recvTask;
-					Map<String, Double> updateQoEmap = new HashMap<String, Double>(recvUpdate.getQoEList());
-					// double update_qoe = recvUpdate.getUpdateQoE();
-					// Msg.info("Received updating QoE for Server: " + update_server + " with qoe: " + update_qoe);
+					/*Map<String, Double> updateQoEmap = new HashMap<String, Double>(recvUpdate.getQoEList());
+					this.qoeUpdateCnt ++;
 					Iterator it = updateQoEmap.entrySet().iterator();
 					while (it.hasNext())
 					{
 						Map.Entry<String, Double> pair = (Map.Entry<String, Double>) it.next();
 						this.updateServerQoE(pair.getKey(), pair.getValue());
-					}
+					}*/
+
+					this.updateServerQoE(recvUpdate.getUpdateServer(), recvUpdate.getUpdateQoE());
 					try {
 						Comm syncComm = QoETask.sendQoESync(recvUpdate.getSenderName(), this.serverQoE);
 						this.comms.add(syncComm);
 					} catch (MsgException e) {
 						Msg.info("Sync QoE sent failure: " + e.toString());
 					}
+
+					// if (this.qoeUpdateCnt % 10 == 0)
+					this.writeServerQoE();
 				}
 			}
 
@@ -155,5 +205,7 @@ public class cacheAgent extends Process {
 		}	
 
 		Msg.info("goodbye!");
+		this.trafficFile.close();
+		this.qoeFile.close();
 	}
 }

@@ -25,11 +25,13 @@ public class clientAgent extends Process {
 	private ArrayList<Comm> comms;
 	private String cacheAgent;
 	private ArrayList<String> videoServers;
+	private ArrayList<String> qoeHeader;
 	private Map<String, Integer> serverLevels;
 	private Map<String, Integer> qoeCount;
 	private Map<String, Double> serverQoE;
 	private QoEComparator qoeCmp;
 	private PrintWriter rstFile;
+	private PrintWriter qoeFile;
 	private double[] curCoords = {0.0, 0.0};
 	private double buf;
 	private int curSeq;
@@ -46,6 +48,7 @@ public class clientAgent extends Process {
 		this.serverLevels = new HashMap<String, Integer>();
 		this.serverQoE = new HashMap<String, Double>();
 		this.videoServers = new ArrayList<String>();
+		this.qoeHeader = new ArrayList<String>();
 		this.qoeCount = new HashMap<String, Integer>();
 		this.buf = 0.0;
 		this.freezeTime = 0.0;
@@ -100,24 +103,30 @@ public class clientAgent extends Process {
 	public String findNextServer(String curServer, double nextQoE)
 	{	
 		Collections.sort(this.videoServers, this.qoeCmp);
+		
+		// Write sorted qoes
+		String sortedQoE = "";
+		String selectedServer = curServer;
+
 		String topServer = this.videoServers.get(0);
 		double topQoE = this.serverQoE.get(topServer);
 
 		// Add probablistic switching
-		double denominator = (double) Math.max(this.curSeq + 1, 100);
+		double denominator = (double) Math.max(this.curSeq + 1, 10);
 		double p = this.qoeCount.get(curServer) / denominator;
 		double d = Math.random();
 
 		if ((topQoE > nextQoE) && (d > p))
-		// if (topQoE > nextQoE)
-			return topServer;
-		else
-			return curServer;
+		{
+			selectedServer = topServer;
+		}
+
+		return selectedServer;
 	}
 
 	public double computeQoE(double freezingTime, int bitrateLevel)
 	{
-		double delta = 0.5;
+		double delta = 0.2;
 		double q_freeze = 5.0, q_bitrate = 5.0;
 		double maxBitrate = this.bitrates[this.bitrates.length - 1];
 		double curBitrate = this.bitrates[bitrateLevel - 1];
@@ -144,24 +153,37 @@ public class clientAgent extends Process {
 		// Send QoE to the cache agent.
 		if (cooperation) {
 			try {
-				Comm updateComm = QoETask.sendQoEUpdate(this.cacheAgent, this.serverQoE);
+				// Comm updateComm = QoETask.sendQoEUpdate(this.cacheAgent, this.serverQoE);
+				Comm updateComm = QoETask.sendQoEUpdate(this.cacheAgent, server, qoe);
 				this.comms.add(updateComm);
 			} catch (MsgException e) {
 				Msg.info("Update message sent failure: " + e.toString());
 			}
 		}
+		this.writeQoE();
+	}
+
+	public void writeQoE()
+	{
+		String qoes = "";
+                for (String server : this.qoeHeader)
+		{
+			String curQoE = String.format("%.3f", this.serverQoE.get(server));
+			qoes = qoes + curQoE + "\t";
+		}
+                this.qoeFile.println(qoes);
+                this.qoeFile.flush();
 	}
 
 	public void updateQoECount(String server, double qoe)
 	{
-		double qoeTh = 4.0;
+		double qoeTh = 4.6;
 		int goodQoECount = this.qoeCount.get(server);
 		
 		if (qoe > qoeTh)
 			goodQoECount ++;
 		
 		this.qoeCount.put(server, goodQoECount);
-		// this.rstFile.println("## current QoE: " + qoe + ", current server good QoE count for server" + server + ": " + goodQoECount);
 	}
 
 	public void syncQoE(Task recvTask) 
@@ -174,9 +196,7 @@ public class clientAgent extends Process {
 		{
 			Map.Entry<String, Double> pair = (Map.Entry<String, Double>) it.next();
 			this.serverQoE.put(pair.getKey(), pair.getValue());
-			// qoePair = qoePair + pair.getKey() + " --> " + pair.getValue() + ", ";
 		}
-		// this.rstFile.println("## current QoEs: " + qoePair);
 	}
 
 	public void processResponse(Task recvTask) throws HostFailureException, MsgException {
@@ -230,7 +250,7 @@ public class clientAgent extends Process {
 			
 			nextQoE = computeQoE(nextFreezing, nextLevel);
 		
-			if (recvSTask.getNum() % 100  == 0)
+			if (recvSTask.getNum() % 10  == 0)
 				cooperate = true;
 			updateQoE(curServer, curQoE, cooperate);
 
@@ -251,6 +271,7 @@ public class clientAgent extends Process {
 			Msg.info("Played: " + this.playTime + "; Current Time: " + curTime +"; Seq: " + recvSTask.getNum() + "; Server: " + curServer +  "; QoE: " + curQoE + "; BW: " + bw + " kbps; Total Freeze: " + this.freezeTime + "; Level: " + curLevel);
 			// System.out.println(recvSTask.getNum() + ", " + curServer + ", "+ curQoE + ", " + bw);
 			this.rstFile.println(recvSTask.getNum() + ", " + curTime + ", " + curServer + ", "+ curQoE + ", " + bw + ", " + this.freezeTime + ", " + curLevel);
+			this.rstFile.flush();
 			this.curSeq = recvSTask.getNum() + 1;
 			if (this.curSeq < 720)
 			{
@@ -289,18 +310,31 @@ public class clientAgent extends Process {
 			try {
 				this.cacheAgent = Host.getByName(args[0]).getName();
 				this.videoServers.add(this.cacheAgent);
+				this.qoeHeader.add(this.cacheAgent);
 				this.serverLevels.put(this.cacheAgent, 7);
 				this.serverQoE.put(this.cacheAgent, 5.0);
 				this.qoeCount.put(this.cacheAgent, 0);
 				this.rstFile = new PrintWriter("./data/" + this.clientName + "_rst.csv");
+				this.qoeFile = new PrintWriter("./data/" + this.clientName + "_qoe.csv");
 				for (int i = 1; i < inputArgs; i ++)
 				{
 					String server = Host.getByName(args[i]).getName();
+					this.qoeHeader.add(server);
 					this.videoServers.add(server);
 					this.serverLevels.put(server, 6);
-					this.serverQoE.put(server, 4.5);
+					if (server.equals("Server_0"))
+						this.serverQoE.put(server, 4.6);
+					else {
+						this.serverQoE.put(server, 4.0 + Math.random() * 0.5);
+					}
 					this.qoeCount.put(server, 0);
 				}
+				String qoeHeaderStr = "";
+				for (String server : this.qoeHeader)
+				{
+					qoeHeaderStr = qoeHeaderStr + server + "\t";
+				}
+				this.qoeFile.println(qoeHeaderStr);
 			} catch (HostNotFoundException | IOException e) {
 				Msg.info("Invalid deployment file OR Unable to create result file ");
 				System.exit(1);
@@ -367,5 +401,6 @@ public class clientAgent extends Process {
 
 		Msg.info("goodbye!");
 		this.rstFile.close();
+		this.qoeFile.close();
 	}
 }

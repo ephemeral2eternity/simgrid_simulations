@@ -1,0 +1,11 @@
+<?xml version='1.0'?>
+<!DOCTYPE platform SYSTEM "http://simgrid.gforge.inria.fr/simgrid.dtd">
+
+<platform version="3">
+  <process function="agentMngt.cacheAgent" host="Server_01">
+    <argument value="Server_03"/>
+  </process>
+  <process function="agentMngt.cacheAgent" host="Server_03">
+    <argument value="Server_01"/>
+  </process>
+</platform>

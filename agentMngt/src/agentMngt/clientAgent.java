@@ -1,6 +1,7 @@
 package agentMngt;
 
-import java.util.ArrayList;
+import java.util.*;
+import java.lang.*;
 import java.lang.reflect.Array;
 import java.util.Map;
 import java.io.IOException;
@@ -82,6 +83,14 @@ public class clientAgent extends Process {
 		return converge;
 	}
 
+        public double getWaitTime(double lambda)
+        {
+                double u = Math.random();
+                double w = - Math.log(u) / lambda;
+
+                return w;
+        }
+
 	public void main(String[] args) throws MsgException {
 		int inputArgs = args.length;
 		Task recvTask = null;
@@ -94,6 +103,8 @@ public class clientAgent extends Process {
 		double diff = 1;
 		double peerDiff = 1;
 		double th = 0.1;
+		double lambda = 1 / 100.0;
+		double waitTime = getWaitTime(lambda);
 
 		// Msg.info("I am agent " + this.hostName);
 		if (inputArgs > 0)
@@ -138,9 +149,11 @@ public class clientAgent extends Process {
 				}
 			}
 		
+			waitFor(waitTime + 1000.0);
 			for (int pos = 0; pos < this.peerAgents.size(); pos ++) {
 				// Msg.info("Ping Agent : " + peerAgents.get(pos));
 				ping(peerAgents.get(pos));
+				waitFor(waitTime);
 			}
 		}
 
@@ -154,14 +167,14 @@ public class clientAgent extends Process {
 						i --;
 					}
 				} catch (Exception e) {
-					Msg.info("[Error] Message sent failure!!");
+					Msg.info("[Error] Message sent failure!!" + e.toString());
 					this.comms.remove(i);
 					// e.printStackTrace();
 				}
 			}
 		
 			try {
-				recvTask = Task.receive(this.hostName, 100);
+				recvTask = Task.receive(this.hostName, 10000);
 			} catch (TimeoutException e) {
 				// Msg.info("[Exception] Timeout exception in retrieving tasks!");
 				timeoutCnt ++;
@@ -197,7 +210,7 @@ public class clientAgent extends Process {
 			}
 
 			// boolean converge = isConverge(this.peerDiffs, th);		
-			if ((this.comms.size() == 0) && ((diff <= th) || (iter >= 100)) && (timeoutCnt > 3))
+			if ((this.comms.size() == 0) && ((diff <= th) || (iter >= 100)) && (timeoutCnt > 10))
 				break;
 		}	
 

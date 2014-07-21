@@ -76,7 +76,7 @@ public class QoETask extends PingPongTask {
         return comm;
    }
 
-   public static Comm sendQoEUpdate(String cacheAgent, Map<String, Double> update_qoe_map) throws MsgException
+   /* public static Comm sendQoEList(String cacheAgent, Map<String, Double> update_qoe_map) throws MsgException
    {
 	double msgSz = 0;
         double computeDuration = 0;
@@ -86,6 +86,20 @@ public class QoETask extends PingPongTask {
         updateTask.setIsUpdate(true);
         updateTask.setTime(time);
         updateTask.setQoEList(update_qoe_map);
+        Comm comm = updateTask.isend(cacheAgent);
+        return comm;
+   }*/
+   
+   public static Comm sendQoEUpdate(String cacheAgent, String update_srv, double update_qoe) throws MsgException
+   {
+	double msgSz = 0;
+        double computeDuration = 0;
+
+        double time = Msg.getClock();
+        QoETask updateTask = new QoETask("QoE_Update", computeDuration, msgSz);
+        updateTask.setIsUpdate(true);
+        updateTask.setTime(time);
+        updateTask.setUpdate(update_srv, update_qoe);
         Comm comm = updateTask.isend(cacheAgent);
         return comm;
    }

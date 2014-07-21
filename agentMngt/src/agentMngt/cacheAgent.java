@@ -1,6 +1,7 @@
 package agentMngt;
 
-import java.util.ArrayList;
+import java.util.*;
+import java.lang.*;
 import java.lang.reflect.Array;
 import java.util.Map;
 import java.io.IOException;
@@ -82,6 +83,14 @@ public class cacheAgent extends Process {
 		return converge;
 	}
 
+        public double getWaitTime(double lambda)
+        {
+                double u = Math.random();
+                double w = - Math.log(u) / lambda;
+
+                return w;
+        }
+
 	public void main(String[] args) throws MsgException {
 		int inputArgs = args.length;
 		Task recvTask = null;
@@ -94,6 +103,8 @@ public class cacheAgent extends Process {
 		double diff = 1;
 		double peerDiff = 1;
 		double th = 0.1;
+		double lambda = 1/1000.0;
+		double waitTime = getWaitTime(lambda);
 
 		Msg.info("I am agent " + this.hostName);
 		if (inputArgs > 0)
@@ -121,8 +132,13 @@ public class cacheAgent extends Process {
 				for(int pos = 0; pos < inputArgs; pos++) {
 		   	   		try {
 						// Msg.info("Input hostname: " + args[pos]);
-						this.peerAgents.add(Host.getByName(args[pos]).getName());
-						this.peerDiffs.add(diff);
+						String peer = Host.getByName(args[pos]).getName();
+						if (!this.hostName.equals(peer))
+						{
+							Msg.info("Added peer : " + peer);
+							this.peerAgents.add(peer);
+							this.peerDiffs.add(diff);
+						}
 		   	   		} catch (HostNotFoundException e) {
 						Msg.info("Invalid deployment file: " + e.toString());
 						System.exit(1);
@@ -131,8 +147,9 @@ public class cacheAgent extends Process {
 			}
 		
 			for (String cacheAgent : this.peerAgents) {
-				// Msg.info("Ping Agent : " + cacheAgent);
+				Msg.info("Ping Agent : " + cacheAgent);
 				ping(cacheAgent);
+				waitFor(waitTime);
 			}
 		}
 
@@ -146,14 +163,14 @@ public class cacheAgent extends Process {
 						i --;
 					}
 				} catch (Exception e) {
-					Msg.info("[Error] Message sent failure!!");
+					Msg.info("[Error] Message sent failure!!" + e.toString());
 					this.comms.remove(i);
 					// e.printStackTrace();
 				}
 			}
 		
 			try {
-				recvTask = Task.receive(this.hostName, 100);
+				recvTask = Task.receive(this.hostName, 10000);
 			} catch (TimeoutException e) {
 				// Msg.info("[Exception] Timeout exception in retrieving tasks!");
 				timeoutCnt ++;

@@ -9,7 +9,7 @@
     <target name="clean">
         <delete dir="build"/>
 	<delete>
-	   <fileset dir="." includes="*.jar"/>
+	   <fileset dir="." includes="AgentTest.jar"/>
 	   <fileset dir="." includes="*.log"/>
 	</delete>
     </target>
