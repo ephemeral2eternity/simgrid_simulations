@@ -69,7 +69,10 @@ public class cacheAgent extends Process {
 		{
 			String curQoE = String.format("%.3f", this.serverQoE.get(server));
 			qoes = qoes + curQoE + "\t";
-		}		
+		}	
+		double time = Msg.getClock();
+		String curTime = String.format("%.3f", time);
+		qoes = qoes + curTime;	
 		this.qoeFile.println(qoes);
 		this.qoeFile.flush();
 	}
@@ -138,6 +141,7 @@ public class cacheAgent extends Process {
 				{
 					qoeHeaderStr = qoeHeaderStr + server + "\t";
 				}
+				qoeHeaderStr = qoeHeaderStr + "Time";
 				this.qoeFile.println(qoeHeaderStr);
 				this.qoeFile.flush();
 			} catch (HostNotFoundException e) {

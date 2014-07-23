@@ -195,7 +195,10 @@ public class clientAgent extends Process {
 		while (it.hasNext())
 		{
 			Map.Entry<String, Double> pair = (Map.Entry<String, Double>) it.next();
-			this.serverQoE.put(pair.getKey(), pair.getValue());
+			if (this.videoServers.contains(pair.getKey()))
+			{
+				this.serverQoE.put(pair.getKey(), pair.getValue());
+			}
 		}
 	}
 
@@ -209,6 +212,8 @@ public class clientAgent extends Process {
 		int curLevel, nextLevel;
 		int lvls = this.bitrates.length;
 		boolean cooperate = false;
+		boolean qoeDriven = true;
+		// boolean qoeDriven = false;
 
 		StreamingTask recvSTask = (StreamingTask) recvTask;
 		if (!recvSTask.getIsRequest())
@@ -241,25 +246,28 @@ public class clientAgent extends Process {
 
 			// Predict user Quality of Experience.
 			bw = (msgSz / dTime) / 1024;
-			nextLevel = findNextLevel(bw);
-			nextFreezing = findNextFreeze(bw, this.buf, nextLevel);
 			curQoE = computeQoE(curFreezing, curLevel);
 
 			// Update counts of good QoE with the current server;
-			updateQoECount(curServer, curQoE);
-			
-			nextQoE = computeQoE(nextFreezing, nextLevel);
-		
-			if (recvSTask.getNum() % 10  == 0)
-				cooperate = true;
-			updateQoE(curServer, curQoE, cooperate);
+			nextLevel = findNextLevel(bw);
+			nextServer = curServer;
 
-			// Find next best server to serve next chunk.
-			nextServer = findNextServer(curServer, nextQoE);
+			if (qoeDriven)
+			{
+				updateQoECount(curServer, curQoE);
+				if (recvSTask.getNum() % 10  == 0)
+				 	cooperate = true;
+				updateQoE(curServer, curQoE, cooperate);
 
-			// If the client should switch server, get the level of bitrate as the level you get from last time.
-			if (!nextServer.equals(curServer))
-				nextLevel = this.serverLevels.get(nextServer);
+				// Find next best server to serve next chunk.
+				nextFreezing = findNextFreeze(bw, this.buf, nextLevel);
+				nextQoE = computeQoE(nextFreezing, nextLevel);
+				nextServer = findNextServer(curServer, nextQoE);
+
+				// If the client should switch server, get the level of bitrate as the level you get from last time.
+				if (!nextServer.equals(curServer))
+					nextLevel = this.serverLevels.get(nextServer);
+			}
 
 			if (this.buf > CHUNKLEN * 6) {
 				waitFor(CHUNKLEN);
@@ -305,6 +313,7 @@ public class clientAgent extends Process {
 
 	public void parseArgs(String[] args) {
 		int inputArgs = args.length;
+		int candidateNum = 5;
 		if (inputArgs > 0)
 		{
 			try {
@@ -316,7 +325,7 @@ public class clientAgent extends Process {
 				this.qoeCount.put(this.cacheAgent, 0);
 				this.rstFile = new PrintWriter("./data/" + this.clientName + "_rst.csv");
 				this.qoeFile = new PrintWriter("./data/" + this.clientName + "_qoe.csv");
-				for (int i = 1; i < inputArgs; i ++)
+				for (int i = 1; i < Math.min(inputArgs, candidateNum); i ++)
 				{
 					String server = Host.getByName(args[i]).getName();
 					this.qoeHeader.add(server);
