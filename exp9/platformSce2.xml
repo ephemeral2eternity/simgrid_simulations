@@ -362,7 +362,7 @@
           <link_ctn id="ServerAcessLink_00"/>
         </route>
       </AS>
-      <link bandwidth="250000000" id="BBServer_00"/>
+      <link bandwidth="100000000" id="BBServer_00"/>
       <link bandwidth="1E9" id="BB_000"/>
       <link bandwidth="1E9" id="BB_001"/>
       <link bandwidth="1E9" id="BB_002"/>
@@ -755,7 +755,7 @@
           <link_ctn id="ServerAcessLink_01"/>
         </route>
       </AS>
-      <link bandwidth="250000000" id="BBServer_01"/>
+      <link bandwidth="100000000" id="BBServer_01"/>
       <link bandwidth="1E9" id="BB_010"/>
       <link bandwidth="1E9" id="BB_011"/>
       <link bandwidth="1E9" id="BB_012"/>
@@ -1148,7 +1148,7 @@
           <link_ctn id="ServerAcessLink_02"/>
         </route>
       </AS>
-      <link bandwidth="250000000" id="BBServer_02"/>
+      <link bandwidth="100000000" id="BBServer_02"/>
       <link bandwidth="1E9" id="BB_020"/>
       <link bandwidth="1E9" id="BB_021"/>
       <link bandwidth="1E9" id="BB_022"/>
@@ -1541,7 +1541,7 @@
           <link_ctn id="ServerAcessLink_03"/>
         </route>
       </AS>
-      <link bandwidth="250000000" id="BBServer_03"/>
+      <link bandwidth="100000000" id="BBServer_03"/>
       <link bandwidth="1E9" id="BB_030"/>
       <link bandwidth="1E9" id="BB_031"/>
       <link bandwidth="1E9" id="BB_032"/>
@@ -1934,7 +1934,7 @@
           <link_ctn id="ServerAcessLink_04"/>
         </route>
       </AS>
-      <link bandwidth="250000000" id="BBServer_04"/>
+      <link bandwidth="100000000" id="BBServer_04"/>
       <link bandwidth="1E9" id="BB_040"/>
       <link bandwidth="1E9" id="BB_041"/>
       <link bandwidth="1E9" id="BB_042"/>
@@ -2327,7 +2327,7 @@
           <link_ctn id="ServerAcessLink_05"/>
         </route>
       </AS>
-      <link bandwidth="250000000" id="BBServer_05"/>
+      <link bandwidth="100000000" id="BBServer_05"/>
       <link bandwidth="1E9" id="BB_050"/>
       <link bandwidth="1E9" id="BB_051"/>
       <link bandwidth="1E9" id="BB_052"/>
@@ -2720,7 +2720,7 @@
           <link_ctn id="ServerAcessLink_06"/>
         </route>
       </AS>
-      <link bandwidth="250000000" id="BBServer_06"/>
+      <link bandwidth="100000000" id="BBServer_06"/>
       <link bandwidth="1E9" id="BB_060"/>
       <link bandwidth="1E9" id="BB_061"/>
       <link bandwidth="1E9" id="BB_062"/>
@@ -3113,7 +3113,7 @@
           <link_ctn id="ServerAcessLink_07"/>
         </route>
       </AS>
-      <link bandwidth="250000000" id="BBServer_07"/>
+      <link bandwidth="100000000" id="BBServer_07"/>
       <link bandwidth="1E9" id="BB_070"/>
       <link bandwidth="1E9" id="BB_071"/>
       <link bandwidth="1E9" id="BB_072"/>
@@ -3158,15 +3158,15 @@
         <link_ctn id="ServerAcessLink_0"/>
       </route>
     </AS>
-    <link bandwidth="250000000" id="BBServer_0"/>
-    <link bandwidth="250000000" id="BB_00"/>
-    <link bandwidth="250000000" id="BB_01"/>
-    <link bandwidth="250000000" id="BB_02"/>
-    <link bandwidth="250000000" id="BB_03"/>
-    <link bandwidth="250000000" id="BB_04"/>
-    <link bandwidth="250000000" id="BB_05"/>
-    <link bandwidth="250000000" id="BB_06"/>
-    <link bandwidth="250000000" id="BB_07"/>
+    <link bandwidth="100000000" id="BBServer_0"/>
+    <link bandwidth="100000000" id="BB_00"/>
+    <link bandwidth="100000000" id="BB_01"/>
+    <link bandwidth="100000000" id="BB_02"/>
+    <link bandwidth="100000000" id="BB_03"/>
+    <link bandwidth="100000000" id="BB_04"/>
+    <link bandwidth="100000000" id="BB_05"/>
+    <link bandwidth="100000000" id="BB_06"/>
+    <link bandwidth="100000000" id="BB_07"/>
     <ASroute dst="exitAS_0" gw_dst="R_0" gw_src="SRouter_0" src="serverAS_0" symmetrical="YES">
       <link_ctn id="BBServer_0"/>
     </ASroute>
