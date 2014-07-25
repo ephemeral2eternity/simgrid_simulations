@@ -1,0 +1,8 @@
+# Scenario SimpleToplogy
+java -jar nonQoEAgent.jar platform.xml deployment.xml
+mkdir nonQoEdata
+mv data/* nonQoEdata
+java -jar nonCoopAgent.jar platform.xml deployment.xml
+mkdir qoeData
+mv data/* qoeData/
+echo "Finishing Scenario Simple Topology" 

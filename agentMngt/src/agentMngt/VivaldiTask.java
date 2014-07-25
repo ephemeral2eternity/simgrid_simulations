@@ -39,15 +39,16 @@ public class VivaldiTask extends PingPongTask {
 
    public Comm processPing(double[] newCoords, double diff) throws MsgException
    {
-        double msgSz = 0;
+        double msgSz = 5000;
         double computeDuration = 0;
 
 	double time = Msg.getClock();
         String sender = this.getSenderName();
         VivaldiTask pongTask = new VivaldiTask("Pong", computeDuration, msgSz);
         pongTask.setIsPing(false);
-        // pongTask.setTime(this.getTime());
-        pongTask.setTime(time);
+        pongTask.setTime(this.getTime());
+        // pongTask.setTime(time);
+	pongTask.setSeq(this.getSeq());
 	pongTask.setVivaldi(newCoords);
 	pongTask.setError(diff);
         Comm comm = pongTask.isend(sender);

@@ -1,0 +1,38 @@
+<?xml version='1.0'?>
+<!DOCTYPE platform SYSTEM "http://simgrid.gforge.inria.fr/simgrid.dtd">
+<platform version="3">
+	<AS id="exp1" routing="Full">
+		<host id="server_A" power="1E8"/>
+		<host id="server_B" power="1E8"/>
+		<host id="client_A" power="5E7"/>
+		<host id="client_B" power="5E7"/>
+
+		<link id="link_client_A" bandwidth="1E7" latency="1E-3" />
+		<link id="link_client_B" bandwidth="1E7" latency="1E-3" />
+		<link id="link_server_A" bandwidth="1E9" latency="1E-4" />
+		<link id="link_server_B" bandwidth="1E9" latency="1E-4" />
+		<link id="bb_A" bandwidth="5E7" latency="1E-4" bandwidth_file="bb_A.bw"/>
+		<!--link id="bb_A" bandwidth="2E6" latency="1E-4" /-->
+		<link id="bb_B" bandwidth="2E6" latency="1E-4" />
+		<route src="client_A" dst="server_A">
+			<link_ctn id="link_client_A"/>
+			<link_ctn id="bb_A"/>
+			<link_ctn id="link_server_A"/>
+		</route>
+		<route src="client_A" dst="server_B">
+			<link_ctn id="link_client_A"/>
+			<link_ctn id="bb_B"/>
+			<link_ctn id="link_server_B"/>
+		</route>
+		<route src="client_B" dst="server_A">
+			<link_ctn id="link_client_B"/>
+			<link_ctn id="bb_A"/>
+			<link_ctn id="link_server_A"/>
+		</route>
+		<route src="client_B" dst="server_B">
+			<link_ctn id="link_client_B"/>
+			<link_ctn id="bb_B"/>
+			<link_ctn id="link_server_B"/>
+		</route>
+	</AS>
+</platform>

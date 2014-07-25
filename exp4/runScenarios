@@ -1,0 +1,119 @@
+# Scenario 0
+java -jar nonQoEAgent.jar platformSce0.xml deployment.xml
+mkdir rsts/nonQoESce0
+mv data/* rsts/nonQoESce0/
+java -jar nonCoopAgent.jar platformSce0.xml deployment.xml
+mkdir rsts/nonCoopSce0
+mv data/* rsts/nonCoopSce0/
+java -jar coopAgent.jar platformSce0.xml deployment.xml
+mkdir rsts/coopSce0
+mv data/* rsts/coopSce0/
+echo "Finishing Scenario 0"
+
+# Scenario 1
+java -jar nonQoEAgent.jar platformSce1.xml deployment.xml
+mkdir rsts/nonQoESce1
+mv data/* rsts/nonQoESce1/
+java -jar nonCoopAgent.jar platformSce1.xml deployment.xml
+mkdir rsts/nonCoopSce1
+mv data/* rsts/nonCoopSce1/
+java -jar coopAgent.jar platformSce1.xml deployment.xml
+mkdir rsts/coopSce1
+mv data/* rsts/coopSce1/
+echo "Finishing Scenario 1"
+
+# Scenario 2
+java -jar nonQoEAgent.jar platformSce2.xml deployment.xml
+mkdir rsts/nonQoESce2
+mv data/* rsts/nonQoESce2/
+java -jar nonCoopAgent.jar platformSce2.xml deployment.xml
+mkdir rsts/nonCoopSce2
+mv data/* rsts/nonCoopSce2/
+java -jar coopAgent.jar platformSce2.xml deployment.xml
+mkdir rsts/coopSce2
+mv data/* rsts/coopSce2/
+echo "Finishing Scenario 2"
+
+# Scenario 3
+java -jar nonQoEAgent.jar platformSce3.xml deployment.xml
+mkdir rsts/nonQoESce3
+mv data/* rsts/nonQoESce3/
+java -jar nonCoopAgent.jar platformSce3.xml deployment.xml
+mkdir rsts/nonCoopSce3
+mv data/* rsts/nonCoopSce3/
+java -jar coopAgent.jar platformSce3.xml deployment.xml
+mkdir rsts/coopSce3
+mv data/* rsts/coopSce3/
+echo "Finishing Scenario 3"
+
+# Scenario 4
+java -jar nonQoEAgent.jar platformSce4.xml deployment.xml
+mkdir rsts/nonQoESce4
+mv data/* rsts/nonQoESce4/
+java -jar nonCoopAgent.jar platformSce4.xml deployment.xml
+mkdir rsts/nonCoopSce4
+mv data/* rsts/nonCoopSce4/
+java -jar coopAgent.jar platformSce4.xml deployment.xml
+mkdir rsts/coopSce4
+mv data/* rsts/coopSce4/
+echo "Finishing Scenario 4"
+
+# Scenario 5
+java -jar nonQoEAgent.jar platformSce5.xml deployment.xml
+mkdir rsts/nonQoESce5
+mv data/* rsts/nonQoESce5/
+java -jar nonCoopAgent.jar platformSce5.xml deployment.xml
+mkdir rsts/nonCoopSce5
+mv data/* rsts/nonCoopSce5/
+java -jar coopAgent.jar platformSce5.xml deployment.xml
+mkdir rsts/coopSce5
+mv data/* rsts/coopSce5/
+echo "Finishing Scenario 5"
+
+# Scenario 6
+java -jar nonQoEAgent.jar platformSce6.xml deployment.xml
+mkdir rsts/nonQoESce6
+mv data/* rsts/nonQoESce6/
+java -jar nonCoopAgent.jar platformSce6.xml deployment.xml
+mkdir rsts/nonCoopSce6
+mv data/* rsts/nonCoopSce6/
+java -jar coopAgent.jar platformSce6.xml deployment.xml
+mkdir rsts/coopSce6
+mv data/* rsts/coopSce6/
+echo "Finishing Scenario 6"
+
+# Scenario 7
+java -jar nonQoEAgent.jar platformSce7.xml deployment.xml
+mkdir rsts/nonQoESce7
+mv data/* rsts/nonQoESce7/
+java -jar nonCoopAgent.jar platformSce7.xml deployment.xml
+mkdir rsts/nonCoopSce7
+mv data/* rsts/nonCoopSce7/
+java -jar coopAgent.jar platformSce7.xml deployment.xml
+mkdir rsts/coopSce7
+mv data/* rsts/coopSce7/
+echo "Finishing Scenario 7"
+
+# Scenario 8
+java -jar nonQoEAgent.jar platformSce8.xml deployment.xml
+mkdir rsts/nonQoESce8
+mv data/* rsts/nonQoESce8/
+java -jar nonCoopAgent.jar platformSce8.xml deployment.xml
+mkdir rsts/nonCoopSce8
+mv data/* rsts/nonCoopSce8/
+java -jar coopAgent.jar platformSce8.xml deployment.xml
+mkdir rsts/coopSce8
+mv data/* rsts/coopSce8/
+echo "Finishing Scenario 8"
+
+# Scenario 9
+java -jar nonQoEAgent.jar platformSce9.xml deployment.xml
+mkdir rsts/nonQoESce9
+mv data/* rsts/nonQoESce9/
+java -jar nonCoopAgent.jar platformSce9.xml deployment.xml
+mkdir rsts/nonCoopSce9
+mv data/* rsts/nonCoopSce9/
+java -jar coopAgent.jar platformSce9.xml deployment.xml
+mkdir rsts/coopSce9
+mv data/* rsts/coopSce9/
+echo "Finishing Scenario 9"

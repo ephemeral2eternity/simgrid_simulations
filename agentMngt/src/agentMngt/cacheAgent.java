@@ -24,6 +24,7 @@ public class cacheAgent extends Process {
 	private String hostName = "";
 	final double commSizeBw = 10000000;
 	private int pongRcv = 0;
+	private int pingSeq = 0;
 	private ArrayList<Comm> comms;
 	private ArrayList<String> peerAgents;
 	private ArrayList<Double> peerDiffs;
@@ -40,13 +41,15 @@ public class cacheAgent extends Process {
 
 	public Comm ping(String peerAgent) throws MsgException
 	{
-		double msgSz = 0;
+		double msgSz = 50;
 		double computeDuration = 0;
 		double time = Msg.getClock();
 		VivaldiTask task = new VivaldiTask("Ping", computeDuration, msgSz);
 		task.setTime(time);
 		task.setIsPing(true);
 		task.setVivaldi(this.curCoords);
+		this.pingSeq ++;
+		task.setSeq(this.pingSeq);
 		// task.setError(diff);
 		Comm comm = task.isend(peerAgent);
 		// Msg.info(hostName + " sent a Ping message to " + peerAgent);
@@ -145,12 +148,15 @@ public class cacheAgent extends Process {
 		   	   		}
 				}
 			}
-		
-			for (String cacheAgent : this.peerAgents) {
-				Msg.info("Ping Agent : " + cacheAgent);
-				ping(cacheAgent);
-				waitFor(waitTime);
-			}
+	
+			// for (int j = 0; j < 10; j ++)	
+			// {
+				for (String cacheAgent : this.peerAgents) {
+					Msg.info("Ping Agent : " + cacheAgent);
+					ping(cacheAgent);
+						// waitFor(waitTime);
+				}
+			// }
 		}
 
 		// System.out.println(this.hostName + ": (" + preCoords[0] + " ," + preCoords[1] + ")");
@@ -189,7 +195,8 @@ public class cacheAgent extends Process {
 					{
 						index = peerAgents.indexOf(recvppTask.getSenderName());
 						RTT = recvppTask.processPong();
-						Msg.info(this.hostName + "<==>" + recvppTask.getSenderName() + ": " + RTT);
+						Msg.info("Seq:" + recvppTask.getSeq() + this.hostName + "<==>" + recvppTask.getSenderName() + ": " + RTT);
+						System.out.println("Seq:" + recvppTask.getSeq() + this.hostName + "<==>" + recvppTask.getSenderName() + ": " + RTT);
 						peerDiff = recvppTask.getError();
 						delta = c_c * diff / (diff + peerDiff);
 						copyArray(this.curCoords, recvppTask.updateVivaldi(preCoords, RTT,  delta));
@@ -199,7 +206,8 @@ public class cacheAgent extends Process {
 						copyArray(preCoords, curCoords);
 						iter ++;
 
-						if ((diff > th) && (iter < 500))
+						// if ((diff > th) && (iter < 500))
+						if (iter < 500)
 							ping(recvppTask.getSenderName());
 					}
 				}

@@ -19,6 +19,7 @@ public class PingPongTask extends Task {
    
    private double timeVal;
    private boolean isPing = true;
+   private int seq;
    
    public PingPongTask() throws NativeException {
       this.timeVal = 0;
@@ -36,6 +37,13 @@ public class PingPongTask extends Task {
       return this.timeVal;
    }
 
+   public int getSeq() {
+	return this.seq;
+   }
+
+   public void setSeq(int no) {
+	this.seq = no;
+   }
    public void setIsPing(boolean IsPing)
    {
 	this.isPing = IsPing;
@@ -61,7 +69,10 @@ public class PingPongTask extends Task {
 	// Msg.info(hostName + " receives a Ping message from " + sender);
 	PingPongTask pongTask = new PingPongTask("Pong", computeDuration, msgSz);
 	pongTask.setIsPing(false);
+	double time = Msg.getClock();
+	// pongTask.setTime(time);
 	pongTask.setTime(this.getTime());
+	pongTask.setSeq(this.getSeq());
 	Comm comm = pongTask.isend(sender);
 
 	// this.comms.add(comm);
