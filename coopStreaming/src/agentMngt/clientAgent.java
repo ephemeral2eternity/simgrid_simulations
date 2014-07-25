@@ -374,63 +374,63 @@ public class clientAgent extends Process {
 		Random rd = new Random();
 		int randomInt = rd.nextInt(3) + 1;
 		double lambda = 1 / Math.pow(10.0, randomInt);
-		int vidNum = 10;
+		// int vidNum = 2;
 	
 		// Process input arguments
 		this.parseArgs(args);
 
-		for (int v = 0; v < vidNum; v ++)
-		{
-			// Waitfor the next request of a video. 
-			double waitTime = getWaitTime(lambda);
-			waitFor(waitTime);
-			
-			// Msg.info(printMap(this.serverLevels));
-			this.qoeCmp = new QoEComparator(this.serverQoE);
-			this.request(this.cacheAgent, this.curSeq, this.serverLevels.get(this.cacheAgent));
-
-			while (true){
-				recvTask = null;	
-				for (int i = 0; i < this.comms.size(); i ++) {
-					try {
-						if (this.comms.get(i).test()) {
-							this.comms.remove(i);
-							i --;
-						}
-					} catch (Exception e) {
-						Msg.info("[Error] Message sent failure!!");
-						this.comms.remove(i);
-					}
-				}
-			
-				try {
-					recvTask = Task.receive(this.clientName, 1000);
-				} catch (TimeoutException e) {
-					Msg.info("[Exception] Timeout exception in retrieving tasks!");
-					timeoutCnt ++;
-				}
+		// for (int v = 0; v < vidNum; v ++)
+		// {
+		// Waitfor the next request of a video. 
+		double waitTime = getWaitTime(lambda);
+		waitFor(waitTime);
 		
-				if (recvTask != null)
-				{
-					timeoutCnt = 0;
-					Msg.info("Data Received!");
-					if (recvTask instanceof StreamingTask)
-					{
-						processResponse(recvTask);
-					}
-					else if (recvTask instanceof QoETask)
-					{
-						// Get new QoE values for all candidate servers.
-						syncQoE(recvTask);
-					}
-				}
+		// Msg.info(printMap(this.serverLevels));
+		this.qoeCmp = new QoEComparator(this.serverQoE);
+		this.request(this.cacheAgent, this.curSeq, this.serverLevels.get(this.cacheAgent));
 
-				// boolean converge = isConverge(this.peerDiffs, th);		
-				// if ((this.comms.size() == 0) && (timeoutCnt > 100))
-				if ((this.comms.size() == 0) && (this.curSeq >= 720))
-					break;
+		while (true){
+			recvTask = null;	
+			for (int i = 0; i < this.comms.size(); i ++) {
+				try {
+					if (this.comms.get(i).test()) {
+						this.comms.remove(i);
+						i --;
+					}
+				} catch (Exception e) {
+					Msg.info("[Error] Message sent failure!!");
+					this.comms.remove(i);
+				}
 			}
-		}	
+		
+			try {
+				recvTask = Task.receive(this.clientName, 1000);
+			} catch (TimeoutException e) {
+				Msg.info("[Exception] Timeout exception in retrieving tasks!");
+				timeoutCnt ++;
+			}
+	
+			if (recvTask != null)
+			{
+				timeoutCnt = 0;
+				Msg.info("Data Received!");
+				if (recvTask instanceof StreamingTask)
+				{
+					processResponse(recvTask);
+				}
+				else if (recvTask instanceof QoETask)
+				{
+					// Get new QoE values for all candidate servers.
+					syncQoE(recvTask);
+				}
+			}
+
+			// boolean converge = isConverge(this.peerDiffs, th);		
+			if ((this.comms.size() == 0) && (timeoutCnt > 100))
+			// if ((this.comms.size() == 0) && (this.curSeq >= 720))
+				break;
+		}
+		//}	
 
 		Msg.info("goodbye!");
 		this.rstFile.close();
