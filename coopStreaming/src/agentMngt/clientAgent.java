@@ -228,7 +228,7 @@ public class clientAgent extends Process {
 		int lvls = this.bitrates.length;
 		boolean cooperate = false;
 		boolean qoeDriven = true;
-		// boolean qoeDriven = false;
+		//boolean qoeDriven = false;
 
 		StreamingTask recvSTask = (StreamingTask) recvTask;
 		if (!recvSTask.getIsRequest())
@@ -271,7 +271,8 @@ public class clientAgent extends Process {
 			if (qoeDriven)
 			{
 				updateQoECount(curServer, curQoE);
-				if (seq % 10  == 0)
+				// if (seq % 10  == 0)
+				if (seq % 5  == 0)
 				 	cooperate = true;
 				updateQoE(curServer, curQoE, cooperate);
 
@@ -298,7 +299,8 @@ public class clientAgent extends Process {
 			this.rstFile.println(recvSTask.getNum() + ", " + curTime + ", " + curServer + ", "+ curQoE + ", " + bw + ", " + this.freezeTime + ", " + curLevel);
 			this.rstFile.flush();
 			this.curSeq = seq + 1;
-			if (this.curSeq < 720)
+			// if (this.curSeq < 720)
+			if (this.curSeq < 120)
 			{
 				// System.out.println("Client selected level: " + nextLevel);
 				this.request(nextServer, this.curSeq, nextLevel);
@@ -372,7 +374,8 @@ public class clientAgent extends Process {
 		Task recvTask = null;
 		int timeoutCnt = 0;
 		Random rd = new Random();
-		int randomInt = rd.nextInt(3) + 1;
+		// int randomInt = rd.nextInt(3) + 1;
+		int randomInt = rd.nextInt(3);
 		double lambda = 1 / Math.pow(10.0, randomInt);
 		// int vidNum = 2;
 	
