@@ -71,16 +71,21 @@ public class clientAgent extends Process {
 		// return comm;
 	}
 
-	public int findNextLevel(double bw)
+	public int findNextLevel(double bw, double buf)
 	{
 		int nextLv = 1;
 		int i = 1;
+		int maxLvl = this.bitrates.length - 1;
 		for (double rate : this.bitrates)
 		{
 			if (bw > rate) {
 				nextLv = i;
 			}
 			i ++;
+		}
+		if (this.buf > CHUNKLEN * 4)
+		{
+			nextLv = ((nextLv + 1) > maxLvl)?maxLvl : (nextLv + 1);
 		}
 		return nextLv;
 	}
@@ -137,7 +142,8 @@ public class clientAgent extends Process {
 
 	public double computeQoE(double freezingTime, int bitrateLevel)
 	{
-		double delta = 0.5;
+		// double delta = 0.5;
+		double delta = 0.2;
 		double q_freeze = 5.0, q_bitrate = 5.0;
 		double maxBitrate = this.bitrates[this.bitrates.length - 1];
 		double curBitrate = this.bitrates[bitrateLevel - 1];
@@ -228,7 +234,7 @@ public class clientAgent extends Process {
 		int lvls = this.bitrates.length;
 		boolean cooperate = false;
 		boolean qoeDriven = true;
-		//boolean qoeDriven = false;
+		// boolean qoeDriven = false;
 
 		StreamingTask recvSTask = (StreamingTask) recvTask;
 		if (!recvSTask.getIsRequest())
@@ -265,15 +271,15 @@ public class clientAgent extends Process {
 			curQoE = computeQoE(curFreezing, curLevel);
 
 			// Update counts of good QoE with the current server;
-			nextLevel = findNextLevel(bw);
+			nextLevel = findNextLevel(bw, this.buf);
 			nextServer = curServer;
 
 			if (qoeDriven)
 			{
 				updateQoECount(curServer, curQoE);
-				// if (seq % 10  == 0)
-				if (seq % 5  == 0)
-				 	cooperate = true;
+				if (seq % 10  == 0)
+				// if (seq % 5  == 0)
+					cooperate = true;
 				updateQoE(curServer, curQoE, cooperate);
 
 				// Find next best server to serve next chunk.
@@ -282,8 +288,8 @@ public class clientAgent extends Process {
 				nextServer = findNextServer(curServer, nextQoE);
 
 				// If the client should switch server, get the level of bitrate as the level you get from last time.
-				if (!nextServer.equals(curServer))
-					nextLevel = nextLevel + 1;
+				// if (!nextServer.equals(curServer))
+				//	nextLevel = nextLevel + 1;
 					// nextLevel = this.serverLevels.get(nextServer);
 			}
 
@@ -299,8 +305,8 @@ public class clientAgent extends Process {
 			this.rstFile.println(recvSTask.getNum() + ", " + curTime + ", " + curServer + ", "+ curQoE + ", " + bw + ", " + this.freezeTime + ", " + curLevel);
 			this.rstFile.flush();
 			this.curSeq = seq + 1;
-			// if (this.curSeq < 720)
-			if (this.curSeq < 120)
+			if (this.curSeq < 720)
+			// if (this.curSeq < 120)
 			{
 				// System.out.println("Client selected level: " + nextLevel);
 				this.request(nextServer, this.curSeq, nextLevel);
@@ -325,7 +331,8 @@ public class clientAgent extends Process {
 	public double getWaitTime(double lambda)
 	{
 		double u = Math.random();
-		double w = - Math.log(u) / lambda;
+		// double w = - Math.log(u) / lambda;
+		double w = u / lambda;
 
 		return w;
 	}
@@ -374,9 +381,10 @@ public class clientAgent extends Process {
 		Task recvTask = null;
 		int timeoutCnt = 0;
 		Random rd = new Random();
-		// int randomInt = rd.nextInt(3) + 1;
-		int randomInt = rd.nextInt(3);
-		double lambda = 1 / Math.pow(10.0, randomInt);
+		int randomInt = rd.nextInt(3) + 1;
+		// int randomInt = rd.nextInt(3);
+		double lambda = 1 / Math.pow(16.0, randomInt);
+		// double lambda = 1 / Math.pow(8.0, randomInt);
 		// int vidNum = 2;
 	
 		// Process input arguments

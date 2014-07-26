@@ -193,19 +193,19 @@ public class cacheAgent extends Process {
 						this.updateServerQoE(pair.getKey(), pair.getValue());
 					}*/
 					
-					if (this.qoeUpdateCnt % 32 == 0)
-					{
-						this.updateServerQoE(recvUpdate.getUpdateServer(), recvUpdate.getUpdateQoE());
-						try {
-							// Comm syncComm = QoETask.sendQoESync(recvUpdate.getSenderName(), this.serverQoE);
-							Comm syncComm = QoETask.sendQoESync(recvUpdate.getSenderName(), this.rcvQoE);
-							this.comms.add(syncComm);
-						} catch (MsgException e) {
-							Msg.info("Sync QoE sent failure: " + e.toString());
-						}
-
-						this.writeServerQoE();
+					// if (this.qoeUpdateCnt % 32 == 0)
+					// {
+					this.updateServerQoE(recvUpdate.getUpdateServer(), recvUpdate.getUpdateQoE());
+					try {
+						// Comm syncComm = QoETask.sendQoESync(recvUpdate.getSenderName(), this.serverQoE);
+						Comm syncComm = QoETask.sendQoESync(recvUpdate.getSenderName(), this.rcvQoE);
+						this.comms.add(syncComm);
+					} catch (MsgException e) {
+						Msg.info("Sync QoE sent failure: " + e.toString());
 					}
+
+					this.writeServerQoE();
+					// }
 				}
 			}
 
