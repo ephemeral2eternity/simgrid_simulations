@@ -56,8 +56,10 @@ public class cacheAgent extends Process {
 			this.load += msgSz / (double) this.timeUnitCnt;
 		}
 		else {
-			this.trafficFile.println(this.timeUnitCnt + ", " + this.load);
-			this.trafficFile.flush();
+			// this.trafficFile.println(this.timeUnitCnt + ", " + this.load);
+			String outLn = Integer.toString(this.timeUnitCnt) + ", " + String.format("%.3f", this.load) + "\n";
+			this.trafficFile.write(outLn);
+			// this.trafficFile.flush();
 			// this.writeServerQoE(ts);
 			this.load = 0.0;
 			this.timeUnitCnt ++;
@@ -75,8 +77,8 @@ public class cacheAgent extends Process {
 		double time = Msg.getClock();
 		String curTime = String.format("%.3f", time);
 		qoes = qoes + curTime;	
-		this.qoeFile.println(qoes);
-		this.qoeFile.flush();
+		this.qoeFile.write(qoes);
+		// this.qoeFile.flush();
 	}
 
 	public Comm processRequest(Task request) throws MsgException
@@ -215,7 +217,9 @@ public class cacheAgent extends Process {
 		}	
 
 		Msg.info("goodbye!");
+		this.trafficFile.flush();
 		this.trafficFile.close();
+		this.qoeFile.flush();
 		this.qoeFile.close();
 	}
 }

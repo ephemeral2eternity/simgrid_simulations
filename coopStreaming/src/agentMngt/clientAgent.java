@@ -3,9 +3,7 @@ package agentMngt;
 import java.util.*;
 import java.lang.*;
 import java.lang.reflect.Array;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.File;
+import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -40,6 +38,7 @@ public class clientAgent extends Process {
 	private double freezeTime;
 	static private double[] bitrates = {400.0, 628.0, 986.0, 1549.0, 2433.0, 3821.0, 6000.0};
 	static private double CHUNKLEN = 5.0;
+	static private int VIDLEN = 120;
 	
 	public clientAgent(Host host, String name, String[] args) {
 		super(host, name, args);
@@ -115,6 +114,8 @@ public class clientAgent extends Process {
 
 		String topServer = this.videoServers.get(0);
 		double topQoE = this.serverQoE.get(topServer);
+		double relaxation = 0.2;
+		double window = 12;
 
 		// Add probablistic switching
 		// double denominator = (double) Math.max(this.curSeq + 1, 10);
@@ -122,10 +123,15 @@ public class clientAgent extends Process {
 
 		// Change probability function of switching
 		double p;
-		if ((nextQoE > 4.0) && (this.qoeCount.get(curServer) == 0))
+		if (nextQoE + relaxation > topQoE)
+			p = 1.0;
+		else if ((nextQoE > 4.0) && (this.qoeCount.get(curServer) == 0))
 			p = 0.5;
-		else
-			p = 1 - Math.pow(0.5, this.qoeCount.get(curServer));
+		else {
+			// p = 1 - Math.pow(0.5, this.qoeCount.get(curServer));
+			double denominator = (double) Math.max(this.curSeq + 1, window);
+			p = this.qoeCount.get(curServer) / denominator;
+		}
 		double d = Math.random();
 
 		if ((topQoE > nextQoE) && (d > p))
@@ -183,19 +189,22 @@ public class clientAgent extends Process {
 	public void writeQoE()
 	{
 		String qoes = "";
-                for (String server : this.qoeHeader)
-		{
-			String curQoE = String.format("%.3f", this.serverQoE.get(server));
+		for (int i = 0; i < this.qoeHeader.size() - 1; i++) {
+			String server = this.qoeHeader.get(i);
+			String curQoE = String.format("%.2f", this.serverQoE.get(server));
 			qoes = qoes + curQoE + "\t";
 		}
-                this.qoeFile.println(qoes);
-                this.qoeFile.flush();
+		String curQoE = String.format("%.2f", this.serverQoE.get(this.qoeHeader.get(this.qoeHeader.size() - 1)));
+		qoes = qoes + curQoE + "\n";
+		this.qoeFile.write(qoes);
+                // this.qoeFile.println(qoes);
+                // this.qoeFile.flush();
 	}
 
 	public void updateQoECount(String server, double qoe)
 	{
-		double qoeHighTh = 4.5;
-		double qoeLowTh = 4.0;
+		double qoeHighTh = 4.0;
+		double qoeLowTh = 2.0;
 		int goodQoECount = this.qoeCount.get(server);
 		
 		if (qoe > qoeHighTh)
@@ -278,7 +287,6 @@ public class clientAgent extends Process {
 			{
 				updateQoECount(curServer, curQoE);
 				if (seq % 10  == 0)
-				// if (seq % 5  == 0)
 					cooperate = true;
 				updateQoE(curServer, curQoE, cooperate);
 
@@ -302,11 +310,12 @@ public class clientAgent extends Process {
 
 			Msg.info("Played: " + this.playTime + "; Current Time: " + curTime +"; Seq: " + recvSTask.getNum() + "; Server: " + curServer +  "; QoE: " + curQoE + "; BW: " + bw + " kbps; Total Freeze: " + this.freezeTime + "; Level: " + curLevel);
 			// System.out.println(recvSTask.getNum() + ", " + curServer + ", "+ curQoE + ", " + bw);
-			this.rstFile.println(recvSTask.getNum() + ", " + curTime + ", " + curServer + ", "+ curQoE + ", " + bw + ", " + this.freezeTime + ", " + curLevel);
-			this.rstFile.flush();
+			String outLn = Integer.toString(seq) + ", " + String.format("%.2f", curTime) + ", " + curServer + ", " + String.format("%.2f", curQoE) + ", " + String.format("%.2f", bw) + ", " + String.format("%.2f", this.freezeTime) + ", " + Integer.toString(curLevel) + "\n";
+			// this.rstFile.println(recvSTask.getNum() + ", " + curTime + ", " + curServer + ", "+ curQoE + ", " + bw + ", " + this.freezeTime + ", " + curLevel);
+			// this.rstFile.flush();
+			this.rstFile.write(outLn);
 			this.curSeq = seq + 1;
-			if (this.curSeq < 720)
-			// if (this.curSeq < 120)
+			if (this.curSeq < VIDLEN)
 			{
 				// System.out.println("Client selected level: " + nextLevel);
 				this.request(nextServer, this.curSeq, nextLevel);
@@ -365,11 +374,12 @@ public class clientAgent extends Process {
 					this.qoeCount.put(server, 0);
 				}
 				String qoeHeaderStr = "";
-				for (String server : this.qoeHeader)
-				{
-					qoeHeaderStr = qoeHeaderStr + server + "\t";
+				for (int i = 0; i < this.qoeHeader.size() - 1; i++) {
+					qoeHeaderStr = qoeHeaderStr + this.qoeHeader.get(i) + "\t";
 				}
-				this.qoeFile.println(qoeHeaderStr);
+				qoeHeaderStr = qoeHeaderStr + this.qoeHeader.get(this.qoeHeader.size() - 1) + "\n";
+				this.qoeFile.write(qoeHeaderStr);
+ 
 			} catch (HostNotFoundException | IOException e) {
 				Msg.info("Invalid deployment file OR Unable to create result file ");
 				System.exit(1);
@@ -444,7 +454,9 @@ public class clientAgent extends Process {
 		//}	
 
 		Msg.info("goodbye!");
+		this.rstFile.flush();
 		this.rstFile.close();
+		this.qoeFile.flush();
 		this.qoeFile.close();
 	}
 }
