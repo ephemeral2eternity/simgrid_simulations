@@ -36,6 +36,7 @@ public class clientAgent extends Process {
 	private double startTime;
 	private double playTime;
 	private double freezeTime;
+	private boolean isTrace;
 	static private double[] bitrates = {400.0, 628.0, 986.0, 1549.0, 2433.0, 3821.0, 6000.0};
 	static private double CHUNKLEN = 5.0;
 	static private int VIDLEN = 120;
@@ -52,6 +53,7 @@ public class clientAgent extends Process {
 		this.buf = 0.0;
 		this.freezeTime = 0.0;
 		this.curSeq = 0;
+		this.isTrace = false;
 	}
 
 	public void request(String cacheServer, int num, int level) throws MsgException
@@ -183,7 +185,9 @@ public class clientAgent extends Process {
 				Msg.info("Update message sent failure: " + e.toString());
 			}
 		}
-		this.writeQoE();
+		if (this.isTrace) {
+			this.writeQoE();
+		}
 	}
 
 	public void writeQoE()
@@ -242,8 +246,8 @@ public class clientAgent extends Process {
 		int seq;
 		int lvls = this.bitrates.length;
 		boolean cooperate = false;
-		boolean qoeDriven = true;
-		// boolean qoeDriven = false;
+		// boolean qoeDriven = true;
+		boolean qoeDriven = false;
 
 		StreamingTask recvSTask = (StreamingTask) recvTask;
 		if (!recvSTask.getIsRequest())
@@ -286,8 +290,8 @@ public class clientAgent extends Process {
 			if (qoeDriven)
 			{
 				updateQoECount(curServer, curQoE);
-				if (seq % 10  == 0)
-					cooperate = true;
+				// if (seq % 10  == 0)
+				//	cooperate = true;
 				updateQoE(curServer, curQoE, cooperate);
 
 				// Find next best server to serve next chunk.
@@ -308,12 +312,14 @@ public class clientAgent extends Process {
 				nextLevel = 1;
 			}
 
-			Msg.info("Played: " + this.playTime + "; Current Time: " + curTime +"; Seq: " + recvSTask.getNum() + "; Server: " + curServer +  "; QoE: " + curQoE + "; BW: " + bw + " kbps; Total Freeze: " + this.freezeTime + "; Level: " + curLevel);
 			// System.out.println(recvSTask.getNum() + ", " + curServer + ", "+ curQoE + ", " + bw);
-			String outLn = Integer.toString(seq) + ", " + String.format("%.2f", curTime) + ", " + curServer + ", " + String.format("%.2f", curQoE) + ", " + String.format("%.2f", bw) + ", " + String.format("%.2f", this.freezeTime) + ", " + Integer.toString(curLevel) + "\n";
-			// this.rstFile.println(recvSTask.getNum() + ", " + curTime + ", " + curServer + ", "+ curQoE + ", " + bw + ", " + this.freezeTime + ", " + curLevel);
-			// this.rstFile.flush();
-			this.rstFile.write(outLn);
+			if (this.isTrace) {
+				Msg.info("Played: " + this.playTime + "; Current Time: " + curTime +"; Seq: " + recvSTask.getNum() + "; Server: " + curServer +  "; QoE: " + curQoE + "; BW: " + bw + " kbps; Total Freeze: " + this.freezeTime + "; Level: " + curLevel);
+				String outLn = Integer.toString(seq) + ", " + String.format("%.2f", curTime) + ", " + curServer + ", " + String.format("%.2f", curQoE) + ", " + String.format("%.2f", bw) + ", " + String.format("%.2f", this.freezeTime) + ", " + Integer.toString(curLevel) + "\n";
+				// this.rstFile.println(recvSTask.getNum() + ", " + curTime + ", " + curServer + ", "+ curQoE + ", " + bw + ", " + this.freezeTime + ", " + curLevel);
+				// this.rstFile.flush();
+				this.rstFile.write(outLn);
+			}
 			this.curSeq = seq + 1;
 			if (this.curSeq < VIDLEN)
 			{
@@ -358,8 +364,10 @@ public class clientAgent extends Process {
 				this.serverLevels.put(this.cacheAgent, 2);
 				this.serverQoE.put(this.cacheAgent, 5.0);
 				this.qoeCount.put(this.cacheAgent, 0);
-				this.rstFile = new PrintWriter("./data/" + this.clientName + "_rst.csv");
-				this.qoeFile = new PrintWriter("./data/" + this.clientName + "_qoe.csv");
+				if (this.isTrace) {
+					this.rstFile = new PrintWriter("./data/" + this.clientName + "_rst.csv");
+					this.qoeFile = new PrintWriter("./data/" + this.clientName + "_qoe.csv");
+				}
 				for (int i = 1; i < Math.min(inputArgs, candidateNum); i ++)
 				{
 					String server = Host.getByName(args[i]).getName();
@@ -378,8 +386,9 @@ public class clientAgent extends Process {
 					qoeHeaderStr = qoeHeaderStr + this.qoeHeader.get(i) + "\t";
 				}
 				qoeHeaderStr = qoeHeaderStr + this.qoeHeader.get(this.qoeHeader.size() - 1) + "\n";
-				this.qoeFile.write(qoeHeaderStr);
- 
+				if (this.isTrace) {
+					this.qoeFile.write(qoeHeaderStr);
+				}
 			} catch (HostNotFoundException | IOException e) {
 				Msg.info("Invalid deployment file OR Unable to create result file ");
 				System.exit(1);
@@ -396,6 +405,12 @@ public class clientAgent extends Process {
 		double lambda = 1 / Math.pow(16.0, randomInt);
 		// double lambda = 1 / Math.pow(8.0, randomInt);
 		// int vidNum = 2;
+
+		// Determine if we want to trace the client
+		double spl_prob = 0.1;
+		double rnd = Math.random();
+		if (rnd < spl_prob)
+			this.isTrace = true;
 	
 		// Process input arguments
 		this.parseArgs(args);
@@ -434,7 +449,7 @@ public class clientAgent extends Process {
 			if (recvTask != null)
 			{
 				timeoutCnt = 0;
-				Msg.info("Data Received!");
+				// Msg.info("Data Received!");
 				if (recvTask instanceof StreamingTask)
 				{
 					processResponse(recvTask);
@@ -454,9 +469,11 @@ public class clientAgent extends Process {
 		//}	
 
 		Msg.info("goodbye!");
-		this.rstFile.flush();
-		this.rstFile.close();
-		this.qoeFile.flush();
-		this.qoeFile.close();
+		if (isTrace) {
+			this.rstFile.flush();
+			this.rstFile.close();
+			this.qoeFile.flush();
+			this.qoeFile.close();
+		}
 	}
 }
