@@ -246,8 +246,8 @@ public class clientAgent extends Process {
 		int seq;
 		int lvls = this.bitrates.length;
 		boolean cooperate = false;
-		// boolean qoeDriven = true;
-		boolean qoeDriven = false;
+		boolean qoeDriven = true;
+		// boolean qoeDriven = false;
 
 		StreamingTask recvSTask = (StreamingTask) recvTask;
 		if (!recvSTask.getIsRequest())
@@ -290,8 +290,8 @@ public class clientAgent extends Process {
 			if (qoeDriven)
 			{
 				updateQoECount(curServer, curQoE);
-				// if (seq % 10  == 0)
-				//	cooperate = true;
+				if (seq % 10  == 0)
+					cooperate = true;
 				updateQoE(curServer, curQoE, cooperate);
 
 				// Find next best server to serve next chunk.

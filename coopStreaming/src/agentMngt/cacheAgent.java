@@ -109,7 +109,7 @@ public class cacheAgent extends Process {
 		double preQoE = this.serverQoE.get(upd_server);
 		double newQoE = upd_qoe * alpha + (1 - alpha) * preQoE;
 		double time = Msg.getClock();
-		Msg.info("Previous value for server " + upd_server + " is " + preQoE + " and updated qoe value is " + upd_qoe);
+		// Msg.info("Previous value for server " + upd_server + " is " + preQoE + " and updated qoe value is " + upd_qoe);
 		// this.qoeFile.println(time + ", " + upd_server + ", " + newQoE);
 		this.serverQoE.put(upd_server, newQoE);
 		this.rcvQoE.put(upd_server, newQoE);
@@ -139,7 +139,7 @@ public class cacheAgent extends Process {
 					String server = Host.getByName(args[i]).getName();
 					this.serverQoE.put(server, 4.0);
 					this.qoeHeader.add(server);
-					Msg.info("Put qoe = 4.0 to server " + server);
+					// Msg.info("Put qoe = 4.0 to server " + server);
 				}
 				String qoeHeaderStr = "";
 				for (String server : this.qoeHeader)
@@ -195,19 +195,19 @@ public class cacheAgent extends Process {
 						this.updateServerQoE(pair.getKey(), pair.getValue());
 					}*/
 					
-					// if (this.qoeUpdateCnt % 32 == 0)
-					// {
-					this.updateServerQoE(recvUpdate.getUpdateServer(), recvUpdate.getUpdateQoE());
-					try {
-						// Comm syncComm = QoETask.sendQoESync(recvUpdate.getSenderName(), this.serverQoE);
-						Comm syncComm = QoETask.sendQoESync(recvUpdate.getSenderName(), this.rcvQoE);
-						this.comms.add(syncComm);
-					} catch (MsgException e) {
-						Msg.info("Sync QoE sent failure: " + e.toString());
-					}
+					if (this.qoeUpdateCnt % 32 == 0)
+					{
+						this.updateServerQoE(recvUpdate.getUpdateServer(), recvUpdate.getUpdateQoE());
+						try {
+							// Comm syncComm = QoETask.sendQoESync(recvUpdate.getSenderName(), this.serverQoE);
+							Comm syncComm = QoETask.sendQoESync(recvUpdate.getSenderName(), this.rcvQoE);
+							this.comms.add(syncComm);
+						} catch (MsgException e) {
+							Msg.info("Sync QoE sent failure: " + e.toString());
+						}
 
-					this.writeServerQoE();
-					// }
+						this.writeServerQoE();
+					}
 				}
 			}
 
