@@ -1,0 +1,383 @@
+<?xml version='1.0'?>
+<!DOCTYPE platform SYSTEM "http://simgrid.gforge.inria.fr/simgrid.dtd">
+
+<platform version="3">
+  <AS id="AS_0" routing="Floyd">
+    <AS id="exitAS_0" routing="Full">
+      <router id="R_0"/>
+    </AS>
+    <AS id="AS_00" routing="Floyd">
+      <AS id="exitAS_00" routing="Full">
+        <router id="R_00"/>
+      </AS>
+      <AS id="AS_000" routing="Floyd">
+        <AS id="exitAS_000" routing="Full">
+          <router id="R_000"/>
+        </AS>
+        <AS id="serverAS_000" routing="Full">
+          <host id="Server_000" power="1E9"/>
+          <link bandwidth="5E8" id="ServerAcessLink_000"/>
+          <router id="SRouter_000"/>
+          <route dst="Server_000" src="SRouter_000" symmetrical="YES">
+            <link_ctn id="ServerAcessLink_000"/>
+          </route>
+        </AS>
+        <link bandwidth="2E8" id="BBServer_000"/>
+        <ASroute dst="exitAS_000" gw_dst="R_000" gw_src="SRouter_000" src="serverAS_000" symmetrical="YES">
+          <link_ctn id="BBServer_000"/>
+        </ASroute>
+      </AS>
+      <AS id="AS_001" routing="Floyd">
+        <AS id="exitAS_001" routing="Full">
+          <router id="R_001"/>
+        </AS>
+        <AS id="serverAS_001" routing="Full">
+          <host id="Server_001" power="1E9"/>
+          <link bandwidth="5E8" id="ServerAcessLink_001"/>
+          <router id="SRouter_001"/>
+          <route dst="Server_001" src="SRouter_001" symmetrical="YES">
+            <link_ctn id="ServerAcessLink_001"/>
+          </route>
+        </AS>
+        <link bandwidth="2E8" id="BBServer_001"/>
+        <ASroute dst="exitAS_001" gw_dst="R_001" gw_src="SRouter_001" src="serverAS_001" symmetrical="YES">
+          <link_ctn id="BBServer_001"/>
+        </ASroute>
+      </AS>
+      <AS id="AS_002" routing="Floyd">
+        <AS id="exitAS_002" routing="Full">
+          <router id="R_002"/>
+        </AS>
+        <AS id="serverAS_002" routing="Full">
+          <host id="Server_002" power="1E9"/>
+          <link bandwidth="5E8" id="ServerAcessLink_002"/>
+          <router id="SRouter_002"/>
+          <route dst="Server_002" src="SRouter_002" symmetrical="YES">
+            <link_ctn id="ServerAcessLink_002"/>
+          </route>
+        </AS>
+        <link bandwidth="2E8" id="BBServer_002"/>
+        <ASroute dst="exitAS_002" gw_dst="R_002" gw_src="SRouter_002" src="serverAS_002" symmetrical="YES">
+          <link_ctn id="BBServer_002"/>
+        </ASroute>
+      </AS>
+      <AS id="AS_003" routing="Floyd">
+        <AS id="exitAS_003" routing="Full">
+          <router id="R_003"/>
+        </AS>
+        <AS id="serverAS_003" routing="Full">
+          <host id="Server_003" power="1E9"/>
+          <link bandwidth="5E8" id="ServerAcessLink_003"/>
+          <router id="SRouter_003"/>
+          <route dst="Server_003" src="SRouter_003" symmetrical="YES">
+            <link_ctn id="ServerAcessLink_003"/>
+          </route>
+        </AS>
+        <link bandwidth="2E8" id="BBServer_003"/>
+        <ASroute dst="exitAS_003" gw_dst="R_003" gw_src="SRouter_003" src="serverAS_003" symmetrical="YES">
+          <link_ctn id="BBServer_003"/>
+        </ASroute>
+      </AS>
+      <link bandwidth="2E8" id="BB_000"/>
+      <link bandwidth="2E8" id="BB_001"/>
+      <link bandwidth="2E8" id="BB_002"/>
+      <link bandwidth="2E8" id="BB_003"/>
+      <ASroute dst="exitAS_00" gw_dst="R_00" gw_src="R_000" src="AS_000" symmetrical="YES">
+        <link_ctn id="BB_000"/>
+      </ASroute>
+      <ASroute dst="exitAS_00" gw_dst="R_00" gw_src="R_001" src="AS_001" symmetrical="YES">
+        <link_ctn id="BB_001"/>
+      </ASroute>
+      <ASroute dst="exitAS_00" gw_dst="R_00" gw_src="R_002" src="AS_002" symmetrical="YES">
+        <link_ctn id="BB_002"/>
+      </ASroute>
+      <ASroute dst="exitAS_00" gw_dst="R_00" gw_src="R_003" src="AS_003" symmetrical="YES">
+        <link_ctn id="BB_003"/>
+      </ASroute>
+    </AS>
+    <AS id="AS_01" routing="Floyd">
+      <AS id="exitAS_01" routing="Full">
+        <router id="R_01"/>
+      </AS>
+      <AS id="AS_010" routing="Floyd">
+        <AS id="exitAS_010" routing="Full">
+          <router id="R_010"/>
+        </AS>
+        <AS id="serverAS_010" routing="Full">
+          <host id="Server_010" power="1E9"/>
+          <link bandwidth="5E8" id="ServerAcessLink_010"/>
+          <router id="SRouter_010"/>
+          <route dst="Server_010" src="SRouter_010" symmetrical="YES">
+            <link_ctn id="ServerAcessLink_010"/>
+          </route>
+        </AS>
+        <link bandwidth="2E8" id="BBServer_010"/>
+        <ASroute dst="exitAS_010" gw_dst="R_010" gw_src="SRouter_010" src="serverAS_010" symmetrical="YES">
+          <link_ctn id="BBServer_010"/>
+        </ASroute>
+      </AS>
+      <AS id="AS_011" routing="Floyd">
+        <AS id="exitAS_011" routing="Full">
+          <router id="R_011"/>
+        </AS>
+        <AS id="serverAS_011" routing="Full">
+          <host id="Server_011" power="1E9"/>
+          <link bandwidth="5E8" id="ServerAcessLink_011"/>
+          <router id="SRouter_011"/>
+          <route dst="Server_011" src="SRouter_011" symmetrical="YES">
+            <link_ctn id="ServerAcessLink_011"/>
+          </route>
+        </AS>
+        <link bandwidth="2E8" id="BBServer_011"/>
+        <ASroute dst="exitAS_011" gw_dst="R_011" gw_src="SRouter_011" src="serverAS_011" symmetrical="YES">
+          <link_ctn id="BBServer_011"/>
+        </ASroute>
+      </AS>
+      <AS id="AS_012" routing="Floyd">
+        <AS id="exitAS_012" routing="Full">
+          <router id="R_012"/>
+        </AS>
+        <AS id="serverAS_012" routing="Full">
+          <host id="Server_012" power="1E9"/>
+          <link bandwidth="5E8" id="ServerAcessLink_012"/>
+          <router id="SRouter_012"/>
+          <route dst="Server_012" src="SRouter_012" symmetrical="YES">
+            <link_ctn id="ServerAcessLink_012"/>
+          </route>
+        </AS>
+        <link bandwidth="2E8" id="BBServer_012"/>
+        <ASroute dst="exitAS_012" gw_dst="R_012" gw_src="SRouter_012" src="serverAS_012" symmetrical="YES">
+          <link_ctn id="BBServer_012"/>
+        </ASroute>
+      </AS>
+      <AS id="AS_013" routing="Floyd">
+        <AS id="exitAS_013" routing="Full">
+          <router id="R_013"/>
+        </AS>
+        <AS id="serverAS_013" routing="Full">
+          <host id="Server_013" power="1E9"/>
+          <link bandwidth="5E8" id="ServerAcessLink_013"/>
+          <router id="SRouter_013"/>
+          <route dst="Server_013" src="SRouter_013" symmetrical="YES">
+            <link_ctn id="ServerAcessLink_013"/>
+          </route>
+        </AS>
+        <link bandwidth="2E8" id="BBServer_013"/>
+        <ASroute dst="exitAS_013" gw_dst="R_013" gw_src="SRouter_013" src="serverAS_013" symmetrical="YES">
+          <link_ctn id="BBServer_013"/>
+        </ASroute>
+      </AS>
+      <link bandwidth="2E8" id="BB_010"/>
+      <link bandwidth="2E8" id="BB_011"/>
+      <link bandwidth="2E8" id="BB_012"/>
+      <link bandwidth="2E8" id="BB_013"/>
+      <ASroute dst="exitAS_01" gw_dst="R_01" gw_src="R_010" src="AS_010" symmetrical="YES">
+        <link_ctn id="BB_010"/>
+      </ASroute>
+      <ASroute dst="exitAS_01" gw_dst="R_01" gw_src="R_011" src="AS_011" symmetrical="YES">
+        <link_ctn id="BB_011"/>
+      </ASroute>
+      <ASroute dst="exitAS_01" gw_dst="R_01" gw_src="R_012" src="AS_012" symmetrical="YES">
+        <link_ctn id="BB_012"/>
+      </ASroute>
+      <ASroute dst="exitAS_01" gw_dst="R_01" gw_src="R_013" src="AS_013" symmetrical="YES">
+        <link_ctn id="BB_013"/>
+      </ASroute>
+    </AS>
+    <AS id="AS_02" routing="Floyd">
+      <AS id="exitAS_02" routing="Full">
+        <router id="R_02"/>
+      </AS>
+      <AS id="AS_020" routing="Floyd">
+        <AS id="exitAS_020" routing="Full">
+          <router id="R_020"/>
+        </AS>
+        <AS id="serverAS_020" routing="Full">
+          <host id="Server_020" power="1E9"/>
+          <link bandwidth="5E8" id="ServerAcessLink_020"/>
+          <router id="SRouter_020"/>
+          <route dst="Server_020" src="SRouter_020" symmetrical="YES">
+            <link_ctn id="ServerAcessLink_020"/>
+          </route>
+        </AS>
+        <link bandwidth="2E8" id="BBServer_020"/>
+        <ASroute dst="exitAS_020" gw_dst="R_020" gw_src="SRouter_020" src="serverAS_020" symmetrical="YES">
+          <link_ctn id="BBServer_020"/>
+        </ASroute>
+      </AS>
+      <AS id="AS_021" routing="Floyd">
+        <AS id="exitAS_021" routing="Full">
+          <router id="R_021"/>
+        </AS>
+        <AS id="serverAS_021" routing="Full">
+          <host id="Server_021" power="1E9"/>
+          <link bandwidth="5E8" id="ServerAcessLink_021"/>
+          <router id="SRouter_021"/>
+          <route dst="Server_021" src="SRouter_021" symmetrical="YES">
+            <link_ctn id="ServerAcessLink_021"/>
+          </route>
+        </AS>
+        <link bandwidth="2E8" id="BBServer_021"/>
+        <ASroute dst="exitAS_021" gw_dst="R_021" gw_src="SRouter_021" src="serverAS_021" symmetrical="YES">
+          <link_ctn id="BBServer_021"/>
+        </ASroute>
+      </AS>
+      <AS id="AS_022" routing="Floyd">
+        <AS id="exitAS_022" routing="Full">
+          <router id="R_022"/>
+        </AS>
+        <AS id="serverAS_022" routing="Full">
+          <host id="Server_022" power="1E9"/>
+          <link bandwidth="5E8" id="ServerAcessLink_022"/>
+          <router id="SRouter_022"/>
+          <route dst="Server_022" src="SRouter_022" symmetrical="YES">
+            <link_ctn id="ServerAcessLink_022"/>
+          </route>
+        </AS>
+        <link bandwidth="2E8" id="BBServer_022"/>
+        <ASroute dst="exitAS_022" gw_dst="R_022" gw_src="SRouter_022" src="serverAS_022" symmetrical="YES">
+          <link_ctn id="BBServer_022"/>
+        </ASroute>
+      </AS>
+      <AS id="AS_023" routing="Floyd">
+        <AS id="exitAS_023" routing="Full">
+          <router id="R_023"/>
+        </AS>
+        <AS id="serverAS_023" routing="Full">
+          <host id="Server_023" power="1E9"/>
+          <link bandwidth="5E8" id="ServerAcessLink_023"/>
+          <router id="SRouter_023"/>
+          <route dst="Server_023" src="SRouter_023" symmetrical="YES">
+            <link_ctn id="ServerAcessLink_023"/>
+          </route>
+        </AS>
+        <link bandwidth="2E8" id="BBServer_023"/>
+        <ASroute dst="exitAS_023" gw_dst="R_023" gw_src="SRouter_023" src="serverAS_023" symmetrical="YES">
+          <link_ctn id="BBServer_023"/>
+        </ASroute>
+      </AS>
+      <link bandwidth="2E8" id="BB_020"/>
+      <link bandwidth="2E8" id="BB_021"/>
+      <link bandwidth="2E8" id="BB_022"/>
+      <link bandwidth="2E8" id="BB_023"/>
+      <ASroute dst="exitAS_02" gw_dst="R_02" gw_src="R_020" src="AS_020" symmetrical="YES">
+        <link_ctn id="BB_020"/>
+      </ASroute>
+      <ASroute dst="exitAS_02" gw_dst="R_02" gw_src="R_021" src="AS_021" symmetrical="YES">
+        <link_ctn id="BB_021"/>
+      </ASroute>
+      <ASroute dst="exitAS_02" gw_dst="R_02" gw_src="R_022" src="AS_022" symmetrical="YES">
+        <link_ctn id="BB_022"/>
+      </ASroute>
+      <ASroute dst="exitAS_02" gw_dst="R_02" gw_src="R_023" src="AS_023" symmetrical="YES">
+        <link_ctn id="BB_023"/>
+      </ASroute>
+    </AS>
+    <AS id="AS_03" routing="Floyd">
+      <AS id="exitAS_03" routing="Full">
+        <router id="R_03"/>
+      </AS>
+      <AS id="AS_030" routing="Floyd">
+        <AS id="exitAS_030" routing="Full">
+          <router id="R_030"/>
+        </AS>
+        <AS id="serverAS_030" routing="Full">
+          <host id="Server_030" power="1E9"/>
+          <link bandwidth="5E8" id="ServerAcessLink_030"/>
+          <router id="SRouter_030"/>
+          <route dst="Server_030" src="SRouter_030" symmetrical="YES">
+            <link_ctn id="ServerAcessLink_030"/>
+          </route>
+        </AS>
+        <link bandwidth="2E8" id="BBServer_030"/>
+        <ASroute dst="exitAS_030" gw_dst="R_030" gw_src="SRouter_030" src="serverAS_030" symmetrical="YES">
+          <link_ctn id="BBServer_030"/>
+        </ASroute>
+      </AS>
+      <AS id="AS_031" routing="Floyd">
+        <AS id="exitAS_031" routing="Full">
+          <router id="R_031"/>
+        </AS>
+        <AS id="serverAS_031" routing="Full">
+          <host id="Server_031" power="1E9"/>
+          <link bandwidth="5E8" id="ServerAcessLink_031"/>
+          <router id="SRouter_031"/>
+          <route dst="Server_031" src="SRouter_031" symmetrical="YES">
+            <link_ctn id="ServerAcessLink_031"/>
+          </route>
+        </AS>
+        <link bandwidth="2E8" id="BBServer_031"/>
+        <ASroute dst="exitAS_031" gw_dst="R_031" gw_src="SRouter_031" src="serverAS_031" symmetrical="YES">
+          <link_ctn id="BBServer_031"/>
+        </ASroute>
+      </AS>
+      <AS id="AS_032" routing="Floyd">
+        <AS id="exitAS_032" routing="Full">
+          <router id="R_032"/>
+        </AS>
+        <AS id="serverAS_032" routing="Full">
+          <host id="Server_032" power="1E9"/>
+          <link bandwidth="5E8" id="ServerAcessLink_032"/>
+          <router id="SRouter_032"/>
+          <route dst="Server_032" src="SRouter_032" symmetrical="YES">
+            <link_ctn id="ServerAcessLink_032"/>
+          </route>
+        </AS>
+        <link bandwidth="2E8" id="BBServer_032"/>
+        <ASroute dst="exitAS_032" gw_dst="R_032" gw_src="SRouter_032" src="serverAS_032" symmetrical="YES">
+          <link_ctn id="BBServer_032"/>
+        </ASroute>
+      </AS>
+      <AS id="AS_033" routing="Floyd">
+        <AS id="exitAS_033" routing="Full">
+          <router id="R_033"/>
+        </AS>
+        <AS id="serverAS_033" routing="Full">
+          <host id="Server_033" power="1E9"/>
+          <link bandwidth="5E8" id="ServerAcessLink_033"/>
+          <router id="SRouter_033"/>
+          <route dst="Server_033" src="SRouter_033" symmetrical="YES">
+            <link_ctn id="ServerAcessLink_033"/>
+          </route>
+        </AS>
+        <link bandwidth="2E8" id="BBServer_033"/>
+        <ASroute dst="exitAS_033" gw_dst="R_033" gw_src="SRouter_033" src="serverAS_033" symmetrical="YES">
+          <link_ctn id="BBServer_033"/>
+        </ASroute>
+      </AS>
+      <link bandwidth="2E8" id="BB_030"/>
+      <link bandwidth="2E8" id="BB_031"/>
+      <link bandwidth="2E8" id="BB_032"/>
+      <link bandwidth="2E8" id="BB_033"/>
+      <ASroute dst="exitAS_03" gw_dst="R_03" gw_src="R_030" src="AS_030" symmetrical="YES">
+        <link_ctn id="BB_030"/>
+      </ASroute>
+      <ASroute dst="exitAS_03" gw_dst="R_03" gw_src="R_031" src="AS_031" symmetrical="YES">
+        <link_ctn id="BB_031"/>
+      </ASroute>
+      <ASroute dst="exitAS_03" gw_dst="R_03" gw_src="R_032" src="AS_032" symmetrical="YES">
+        <link_ctn id="BB_032"/>
+      </ASroute>
+      <ASroute dst="exitAS_03" gw_dst="R_03" gw_src="R_033" src="AS_033" symmetrical="YES">
+        <link_ctn id="BB_033"/>
+      </ASroute>
+    </AS>
+    <link bandwidth="2E8" id="BB_00"/>
+    <link bandwidth="2E8" id="BB_01"/>
+    <link bandwidth="2E8" id="BB_02"/>
+    <link bandwidth="2E8" id="BB_03"/>
+    <ASroute dst="exitAS_0" gw_dst="R_0" gw_src="R_00" src="AS_00" symmetrical="YES">
+      <link_ctn id="BB_00"/>
+    </ASroute>
+    <ASroute dst="exitAS_0" gw_dst="R_0" gw_src="R_01" src="AS_01" symmetrical="YES">
+      <link_ctn id="BB_01"/>
+    </ASroute>
+    <ASroute dst="exitAS_0" gw_dst="R_0" gw_src="R_02" src="AS_02" symmetrical="YES">
+      <link_ctn id="BB_02"/>
+    </ASroute>
+    <ASroute dst="exitAS_0" gw_dst="R_0" gw_src="R_03" src="AS_03" symmetrical="YES">
+      <link_ctn id="BB_03"/>
+    </ASroute>
+  </AS>
+</platform>
+

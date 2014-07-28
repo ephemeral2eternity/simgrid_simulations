@@ -1,0 +1,85 @@
+<?xml version='1.0'?>
+<!DOCTYPE platform SYSTEM "http://simgrid.gforge.inria.fr/simgrid.dtd">
+
+<platform version="3">
+  <process function="agentDiscovery.cacheAgent" host="Server_000">
+    <argument value="Server_033"/>
+    <argument value="Server_001"/>
+    <argument value="overlayID.csv"/>
+  </process>
+  <process function="agentDiscovery.cacheAgent" host="Server_001">
+    <argument value="Server_000"/>
+    <argument value="Server_002"/>
+    <argument value="overlayID.csv"/>
+  </process>
+  <process function="agentDiscovery.cacheAgent" host="Server_002">
+    <argument value="Server_001"/>
+    <argument value="Server_003"/>
+    <argument value="overlayID.csv"/>
+  </process>
+  <process function="agentDiscovery.cacheAgent" host="Server_003">
+    <argument value="Server_002"/>
+    <argument value="Server_010"/>
+    <argument value="overlayID.csv"/>
+  </process>
+  <process function="agentDiscovery.cacheAgent" host="Server_010">
+    <argument value="Server_003"/>
+    <argument value="Server_011"/>
+    <argument value="overlayID.csv"/>
+  </process>
+  <process function="agentDiscovery.cacheAgent" host="Server_011">
+    <argument value="Server_010"/>
+    <argument value="Server_012"/>
+    <argument value="overlayID.csv"/>
+  </process>
+  <process function="agentDiscovery.cacheAgent" host="Server_012">
+    <argument value="Server_011"/>
+    <argument value="Server_013"/>
+    <argument value="overlayID.csv"/>
+  </process>
+  <process function="agentDiscovery.cacheAgent" host="Server_013">
+    <argument value="Server_012"/>
+    <argument value="Server_020"/>
+    <argument value="overlayID.csv"/>
+  </process>
+  <process function="agentDiscovery.cacheAgent" host="Server_020">
+    <argument value="Server_013"/>
+    <argument value="Server_021"/>
+    <argument value="overlayID.csv"/>
+  </process>
+  <process function="agentDiscovery.cacheAgent" host="Server_021">
+    <argument value="Server_020"/>
+    <argument value="Server_022"/>
+    <argument value="overlayID.csv"/>
+  </process>
+  <process function="agentDiscovery.cacheAgent" host="Server_022">
+    <argument value="Server_021"/>
+    <argument value="Server_023"/>
+    <argument value="overlayID.csv"/>
+  </process>
+  <process function="agentDiscovery.cacheAgent" host="Server_023">
+    <argument value="Server_022"/>
+    <argument value="Server_030"/>
+    <argument value="overlayID.csv"/>
+  </process>
+  <process function="agentDiscovery.cacheAgent" host="Server_030">
+    <argument value="Server_023"/>
+    <argument value="Server_031"/>
+    <argument value="overlayID.csv"/>
+  </process>
+  <process function="agentDiscovery.cacheAgent" host="Server_031">
+    <argument value="Server_030"/>
+    <argument value="Server_032"/>
+    <argument value="overlayID.csv"/>
+  </process>
+  <process function="agentDiscovery.cacheAgent" host="Server_032">
+    <argument value="Server_031"/>
+    <argument value="Server_033"/>
+    <argument value="overlayID.csv"/>
+  </process>
+  <process function="agentDiscovery.cacheAgent" host="Server_033">
+    <argument value="Server_032"/>
+    <argument value="Server_000"/>
+    <argument value="overlayID.csv"/>
+  </process>
+</platform>
