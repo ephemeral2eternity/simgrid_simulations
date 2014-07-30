@@ -402,12 +402,13 @@ public class clientAgent extends Process {
 		Random rd = new Random();
 		int randomInt = rd.nextInt(3) + 1;
 		// int randomInt = rd.nextInt(3);
-		double lambda = 1 / Math.pow(16.0, randomInt);
+		double lambda = 1 / Math.pow(10.0, randomInt);
 		// double lambda = 1 / Math.pow(8.0, randomInt);
 		// int vidNum = 2;
 
 		// Determine if we want to trace the client
-		double spl_prob = 0.1;
+		// double spl_prob = 0.1;
+		double spl_prob = 0.2;
 		double rnd = Math.random();
 		if (rnd < spl_prob)
 			this.isTrace = true;

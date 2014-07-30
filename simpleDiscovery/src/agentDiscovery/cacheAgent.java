@@ -167,11 +167,11 @@ public class cacheAgent extends Process {
 					Msg.info("The overlay ID file is in wrong format: " + row);
 					return false;
 				}
-				int curID = Integer.parseInt(parts[1].replaceAll("\\s+",""));
-				// Msg.info("Load ID for " + parts[0] + ", " + parts[1]);
-				this.overlayIDs.put(parts[0], curID);
+				String IDStr = parts[1].replaceAll("\\s+", "");
+				String agent = parts[0].replaceAll("\\s+", "");
+				int curID = Integer.parseInt(IDStr);
+				this.overlayIDs.put(agent, curID);
 				serverNum ++;
-				// Msg.info("Successfully put ID" + parts[1] + " for agent " + parts[0]);
 			}
 			this.ID = this.overlayIDs.get(this.hostName).intValue();
 		} catch (IOException e) {
@@ -179,6 +179,7 @@ public class cacheAgent extends Process {
 			return false;
 		}
 		this.srvNum = serverNum;
+		Msg.info("Finishing load overlay ID!");
 		return true;
 	}
 

@@ -72,11 +72,11 @@ public class cacheAgent extends Process {
 		for (String server:this.qoeHeader)
 		{
 			String curQoE = String.format("%.3f", this.serverQoE.get(server));
-			qoes = qoes + curQoE + "\t";
+			qoes = qoes + curQoE + ", ";
 		}	
 		double time = Msg.getClock();
 		String curTime = String.format("%.3f", time);
-		qoes = qoes + curTime;	
+		qoes = qoes + curTime + "\n";	
 		this.qoeFile.write(qoes);
 		// this.qoeFile.flush();
 	}
@@ -129,30 +129,27 @@ public class cacheAgent extends Process {
 			Msg.info("Unable to create result files for server: " + this.hostName);
 			System.exit(1);
 		}
-		if (inputArgs > 0)
-		{
-			try {
-				this.serverQoE.put(this.hostName, 5.0);
-				this.qoeHeader.add(this.hostName);
-				for (int i = 0; i < inputArgs; i ++)
-				{
-					String server = Host.getByName(args[i]).getName();
-					this.serverQoE.put(server, 4.0);
-					this.qoeHeader.add(server);
-					// Msg.info("Put qoe = 4.0 to server " + server);
-				}
-				String qoeHeaderStr = "";
-				for (String server : this.qoeHeader)
-				{
-					qoeHeaderStr = qoeHeaderStr + server + "\t";
-				}
-				qoeHeaderStr = qoeHeaderStr + "Time";
-				this.qoeFile.println(qoeHeaderStr);
-				this.qoeFile.flush();
-			} catch (HostNotFoundException e) {
-				Msg.info("Invalid input arguments for cacheAgent in deployment file: " + e.toString());
-				System.exit(1);
+
+		try {
+			this.serverQoE.put(this.hostName, 5.0);
+			this.qoeHeader.add(this.hostName);
+			for (int i = 0; i < inputArgs; i ++)
+			{
+				String server = Host.getByName(args[i]).getName();
+				this.serverQoE.put(server, 4.0);
+				this.qoeHeader.add(server);
+				// Msg.info("Put qoe = 4.0 to server " + server);
 			}
+			String qoeHeaderStr = "";
+			for (String server : this.qoeHeader)
+			{
+				qoeHeaderStr = qoeHeaderStr + server + ",";
+			}
+			qoeHeaderStr = qoeHeaderStr + "Time" + "\n";
+			this.qoeFile.write(qoeHeaderStr);
+		} catch (HostNotFoundException e) {
+			Msg.info("Invalid input arguments for cacheAgent in deployment file: " + e.toString());
+			System.exit(1);
 		}
 
 		while (true){
@@ -195,19 +192,19 @@ public class cacheAgent extends Process {
 						this.updateServerQoE(pair.getKey(), pair.getValue());
 					}*/
 					
-					if (this.qoeUpdateCnt % 32 == 0)
-					{
-						this.updateServerQoE(recvUpdate.getUpdateServer(), recvUpdate.getUpdateQoE());
-						try {
-							// Comm syncComm = QoETask.sendQoESync(recvUpdate.getSenderName(), this.serverQoE);
-							Comm syncComm = QoETask.sendQoESync(recvUpdate.getSenderName(), this.rcvQoE);
-							this.comms.add(syncComm);
-						} catch (MsgException e) {
-							Msg.info("Sync QoE sent failure: " + e.toString());
-						}
-
-						this.writeServerQoE();
+					// if (this.qoeUpdateCnt % 10 == 0)
+					// {
+					this.updateServerQoE(recvUpdate.getUpdateServer(), recvUpdate.getUpdateQoE());
+					try {
+						// Comm syncComm = QoETask.sendQoESync(recvUpdate.getSenderName(), this.serverQoE);
+						Comm syncComm = QoETask.sendQoESync(recvUpdate.getSenderName(), this.rcvQoE);
+						this.comms.add(syncComm);
+					} catch (MsgException e) {
+						Msg.info("Sync QoE sent failure: " + e.toString());
 					}
+
+					this.writeServerQoE();
+					//}
 				}
 			}
 
